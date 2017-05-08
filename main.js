@@ -16,13 +16,11 @@ function createWindow () {
   mainWindow = new BrowserWindow({width: 800, height: 600})
 
   // and load the index.html of the app.
-  /*mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'www/index.html'),
     protocol: 'file:',
     slashes: true
-  }))*/
-
-  mainWindow.loadURL("http://n-rabion-launcher.kph.pw/nrabion/launcher/index.html")
+  }))
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

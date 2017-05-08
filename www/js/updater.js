@@ -11,3 +11,5 @@ class UpdaterMinecraft {
     }
 
 }
+
+module.exports = {UpdaterMinecraft}
