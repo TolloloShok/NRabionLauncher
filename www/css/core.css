@@ -7,13 +7,13 @@ html, body {
     position: absolute;
     color: red;
     width: 100%;
-    animation: fadeIn 1s ease-in-out;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 .page.hidden {
     visibility: hidden;
-    transition: visibility 0s 1s;
-    animation: fadeOut 1s ease-in-out;
+    transition: visibility 0s 0.5s;
+    animation: fadeOut 0.5s ease-in-out;
 }
 
 footer {
