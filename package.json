@@ -8,18 +8,15 @@
     "package": "electron-packager . --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds"
   },
   "repository": "https://github.com/kapehh-karen/NRabionLauncher",
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
-  ],
+  "keywords": [],
   "author": "kapehh",
+  "license": "GPL",
   "devDependencies": {
     "electron": "*",
     "extract-zip": "*",
     "electron-packager": "*",
-    "electron-winstaller": "*"
+    "electron-winstaller": "*",
+    "jquery": "*",
+    "nconf": "*"
   }
 }

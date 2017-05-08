@@ -1,0 +1,62 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.page {
+    position: absolute;
+    color: red;
+    width: 100%;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.page.hidden {
+    visibility: hidden;
+    transition: visibility 0s 1s;
+    animation: fadeOut 1s ease-in-out;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: right;
+    padding: 5px;
+    box-sizing: border-box;
+    font-style: italic;
+    color: #333;
+}
+
+@keyframes fadeIn {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+
+    1% {
+        display: block;
+        opacity: 0;
+    }
+
+    100% {
+        display: block;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    100% {
+        display: none;
+        opacity: 0;
+    }
+
+    99% {
+        display: block;
+        opacity: 0;
+    }
+
+    0% {
+        display: block;
+        opacity: 1;
+    }
+}
