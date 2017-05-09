@@ -6,11 +6,8 @@
         <link rel="stylesheet" href="./css/core.css">
     </head>
     <body>
-        <header>
-            [N]-Rabion
-        </header>
         <main>
-            <div class="page hidden" data-page="loading">
+            <div class="page" data-page="loading">
                 Wait...
             </div>
             <div class="page hidden" data-page="download">
@@ -30,7 +27,9 @@
         </footer>
     </body>
     <script>
-        window.$ = window.jQuery = require('jquery');
-        require("./js/core.js");
+        window.onload = () => {
+            window.$ = window.jQuery = require('jquery');
+            require("./js/core.js");
+        }
     </script>
 </html>

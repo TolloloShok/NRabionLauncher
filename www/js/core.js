@@ -70,5 +70,4 @@ $("#run").click(() => {
         })
 })
 
-pager.show(pager.PAGE_LOADING)
 showActualyScreen()

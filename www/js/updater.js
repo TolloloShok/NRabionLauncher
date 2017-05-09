@@ -78,9 +78,17 @@ class UpdaterMinecraft {
 
                         fs.unlink(localFileName, (err) => { })
 
+                        if (options.callbackFileDownloadComplete) {
+                            options.callbackFileDownloadComplete(f.name)
+                        }
+
                         recursiveDownload(index + 1)
                     })
                 } else {
+                    if (options.callbackFileDownloadComplete) {
+                        options.callbackFileDownloadComplete(f.name)
+                    }
+
                     recursiveDownload(index + 1)
                 }
             }).catch((err) => {
