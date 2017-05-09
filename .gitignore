@@ -1,3 +1,3 @@
-node_modules/
-release-builds/
-dist/
+client/node_modules/
+client/release-builds/
+client/dist/
