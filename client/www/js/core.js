@@ -11,43 +11,67 @@ const CONFIG_VERSION_LAUNCHER = "version_minecraft"
 const {UpdaterMinecraft} = require("./updater.js")
 const pager = require("./pager.js")
 const consts = require('./consts.js')
+const downloader = require('./download.js')
 
 let mcUpdater = new UpdaterMinecraft()
 
 nconf.use('file', { file: path.join(mcUpdater.getDir(), 'launcher_config.json') })
 nconf.load()
 
-function showActualyScreen() {
-    var version = nconf.get(CONFIG_VERSION_LAUNCHER)
+function versionsCheck(data) {
+    let version = nconf.get(CONFIG_VERSION_LAUNCHER)
 
-    requestDataClient((data) => {
-        if (mcUpdater.checkUpdate() || version === undefined || version != data.version) {
-            pager.show(pager.PAGE_DOWNLOAD)
+    // check launcher updates
+    if (window.launcherVersion != data.launcher_version) {
+        pager.show(pager.PAGE_DOWNLOAD_LAUNCHER)
 
-            let divDownloadItems = $("#download_items");
-            mcUpdater.updateFull(
-                data,
-                {
-                    callbackFileDownload: (name) => {
-                        divDownloadItems.append("Start: ").append(name).append('<br>')
-                    },
-                    callbackProgressDownload: (name, progress) => {
-                        console.info(name, progress)
-                    },
-                    callbackFileDownloadComplete: (name) => {
-                        divDownloadItems.append("Finish: ").append(name).append('<br>')
-                    },
-                    callbackComplete: () => {
-                        nconf.set(CONFIG_VERSION_LAUNCHER, data.version)
-                        nconf.save()
+        let divDownloadLauncher = $("#download_launcher")
+        let localFileName = path.join(mcUpdater.getDir(), data.launcher_setup)
+        let remoteFileName = url.resolve(consts.URL_BASE, data.launcher_setup)
 
-                        pager.show(pager.PAGE_AUTH)
-                    }
-                })
-        } else {
-            pager.show(pager.PAGE_AUTH)
-        }
-    })
+        downloader.downloadFile({
+            localFile: localFileName,
+            remoteFile: remoteFileName,
+            onProgress: (received_bytes, total_bytes) => {
+                divDownloadLauncher.text("Received: " + received_bytes + " / " + total_bytes)
+            }
+        }).then(() => {
+            child_process.exec('"' + localFileName + '"')
+            window.mainWindow.close()
+        }).catch((err) => {
+            alert(err.message)
+            window.mainWindow.close()
+        })
+        return;
+    }
+
+    // check minecraft updates
+    if (version === undefined || version != data.version) {
+        pager.show(pager.PAGE_DOWNLOAD)
+
+        let divDownloadItems = $("#download_items");
+        mcUpdater.updateFull(
+            data,
+            {
+                callbackFileDownload: (name) => {
+                    divDownloadItems.append("Start: ").append(name).append('<br>')
+                },
+                callbackProgressDownload: (name, progress) => {
+                    console.info(name, progress)
+                },
+                callbackFileDownloadComplete: (name) => {
+                    divDownloadItems.append("Finish: ").append(name).append('<br>')
+                },
+                callbackComplete: () => {
+                    nconf.set(CONFIG_VERSION_LAUNCHER, data.version)
+                    nconf.save()
+
+                    pager.show(pager.PAGE_AUTH)
+                }
+            })
+    } else {
+        pager.show(pager.PAGE_AUTH)
+    }
 }
 
 function requestDataClient(callback) {
@@ -123,8 +147,13 @@ $("#run").click(() => {
             cwd: minecraftDir
         },
         () => {
-            pager.show(pager.PAGE_AUTH)
+            pager.show(pager.PAGE_ACCOUNT)
+            window.mainWindow.restore()
         })
+
+    window.mainWindow.minimize()
 })
 
-showActualyScreen()
+
+// main
+requestDataClient(versionsCheck)

@@ -14,9 +14,16 @@
                 download
                 <div id="download_items"></div>
             </div>
+            <div class="page hidden" data-page="download_launcher">
+                download launcher
+                <div id="download_launcher"></div>
+            </div>
             <div class="page hidden" data-page="auth">
                 auth
-                <button id="run">Run test</button>
+            </div>
+            <div class="page hidden" data-page="account">
+                Logined. Press GO to run
+                <button id="run">GO</button>
             </div>
             <div class="page hidden" data-page="playing">
                 YOU PLAYING!
@@ -27,6 +34,14 @@
         </footer>
     </body>
     <script>
+        let remote = require('electron').remote
+        let version = remote.getGlobal('sharedObj').version
+        let mainWindow = remote.getCurrentWindow()
+
+        document.title = document.title + " v" + version
+        window.launcherVersion = version
+        window.mainWindow = mainWindow
+
         window.onload = () => {
             window.$ = window.jQuery = require('jquery');
             require("./js/core.js");

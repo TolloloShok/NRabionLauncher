@@ -12,34 +12,18 @@ class UpdaterMinecraft {
 
     constructor() {
         this.minecraftDir = path.join(process.env.APPDATA, consts.MINECRAFT_DIR_NAME)
+
+        // Create MC dir
+        if (!fs.existsSync(this.minecraftDir)) {
+            fs.mkdirSync(this.minecraftDir)
+        }
     }
 
     getDir() {
         return this.minecraftDir;
     }
 
-    checkUpdate() {
-        return !fs.existsSync(this.minecraftDir)
-    }
-
     updateFull(data, options) {
-        if (fs.existsSync(this.minecraftDir)) {
-            fs.remove(this.minecraftDir, (err) => {
-                if (err)  {
-                    alert(err.message)
-                } else {
-                    this.downloadMinecraft(data, options)
-                }
-            });
-        } else {
-            this.downloadMinecraft(data, options)
-        }
-    }
-
-    downloadMinecraft(data, options) {
-        // Create MC dir
-        fs.mkdirSync(this.minecraftDir)
-
         let countFiles = data.files.length
 
         let recursiveDownload = (index) => {

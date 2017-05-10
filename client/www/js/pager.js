@@ -4,6 +4,8 @@ const PAGE_AUTH = 'auth'
 const PAGE_DOWNLOAD = 'download'
 const PAGE_LOADING = 'loading'
 const PAGE_PLAYING = 'playing'
+const PAGE_DOWNLOAD_LAUNCHER = 'download_launcher'
+const PAGE_ACCOUNT = 'account'
 
 function show(page) {
     if (page == PAGE_AUTH) {
@@ -29,6 +31,26 @@ function show(page) {
     } else {
         $("div[data-page=" + PAGE_PLAYING + "]").addClass("hidden")
     }
+
+    if (page == PAGE_DOWNLOAD_LAUNCHER) {
+        $("div[data-page=" + PAGE_DOWNLOAD_LAUNCHER + "]").removeClass("hidden")
+    } else {
+        $("div[data-page=" + PAGE_DOWNLOAD_LAUNCHER + "]").addClass("hidden")
+    }
+    
+    if (page == PAGE_ACCOUNT) {
+        $("div[data-page=" + PAGE_ACCOUNT + "]").removeClass("hidden")
+    } else {
+        $("div[data-page=" + PAGE_ACCOUNT + "]").addClass("hidden")
+    }
 }
 
-module.exports = {PAGE_AUTH, PAGE_DOWNLOAD, PAGE_LOADING, PAGE_PLAYING, show}
+module.exports = {
+    PAGE_AUTH,
+    PAGE_DOWNLOAD,
+    PAGE_LOADING,
+    PAGE_PLAYING,
+    PAGE_DOWNLOAD_LAUNCHER,
+    PAGE_ACCOUNT,
+    show
+}
