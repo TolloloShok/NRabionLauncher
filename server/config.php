@@ -5,15 +5,15 @@
     //ini_set('display_startup_errors', 1);
 
     /**
-     *  Authorization script by kapehh [MODIFICATION for WordPress]
+     *  Authorization script by kapehh [for WordPress]
      *  
      *  URLS:
      
      *   For client-side, client send JOIN request for player (UUID of player, AccessToken from authorization, ServerID from server)
-     *     /kph/authorization.php?action=join
+     *     /*.php?action=join
      *  
      *   For server-side, server check Username and ServerID
-     *     /kph/authorization.php?action=hasjoined
+     *     /*.php?action=hasJoined
      *  
      *  
      *  MySQL Table:
@@ -24,8 +24,8 @@
      *       `uuid` VARCHAR(255) NOT NULL DEFAULT '',
      *       `accessToken` VARCHAR(255) NOT NULL DEFAULT '',
      *       `serverID` VARCHAR(255) NOT NULL DEFAULT '',
-     *       `skin` VARCHAR(255) NOT NULL DEFAULT '',
-     *       `cloak` VARCHAR(255) NOT NULL DEFAULT '',
+     *       `skin` VARCHAR(512) NOT NULL DEFAULT '',
+     *       `cloak` VARCHAR(512) NOT NULL DEFAULT '',
      *       PRIMARY KEY (`id`)
      *   )
      *
@@ -33,10 +33,11 @@
     
     $DB_HOST = "localhost";
     $DB_PORT = 3306;
-    $DB_USER = "karen";
-    $DB_PASS = "password";
-    $DB_NAME = "mc_test";
+    $DB_USER = "root";
+    $DB_PASS = "xxx";
+    $DB_NAME = "wordpress";
     $DB_TABLE = "mc_auth_players";
+    $DB_TABLE_WP_USERS = "wp_users";
     
     require_once('lib/functions.php');
     
