@@ -29,13 +29,14 @@
                 $stmt->bind_param("ss", $selected_profile, $access_token);
                 
                 if ($stmt->execute()) {
-                    $res = $stmt->get_result();
-                    $item = $res->fetch_array(MYSQLI_ASSOC);
+                    $stmt->bind_result($user_id);
                     
-                    if ($item) {
+                    if ($stmt->fetch()) {
+                        $stmt->close();
+                        
                         // Update serverId token
                         $stmt = $mysqli->prepare("UPDATE {$DB_TABLE} SET `serverID` = ? WHERE `id` = ?");
-                        $stmt->bind_param("si", $server_id, $item["id"]);
+                        $stmt->bind_param("si", $server_id, $user_id);
                         $stmt->execute();
                         die();
                     } else {
@@ -60,27 +61,28 @@
                 $stmt->bind_param("ss", $username, $server_id);
                 
                 if ($stmt->execute()) {
-                    $res = $stmt->get_result();
-                    $item = $res->fetch_array(MYSQLI_ASSOC);
+                    $stmt->bind_result($user_name, $user_uuid, $user_skin, $user_cloak);
                     
-                    if ($item) {
-                        $textures = array("SKIN" => array("url" => $item["skin"]));
+                    if ($stmt->fetch()) {
+                        $stmt->close();
+                        
+                        $textures = array("SKIN" => array("url" => $user_skin));
                         
                         // If cloak exists then add to textures
-                        if (strlen(trim($item["cloak"])) > 0) {
-                            $textures["CAPE"] = array("url" => $item["cloak"]);
+                        if (strlen(trim($user_cloak)) > 0) {
+                            $textures["CAPE"] = array("url" => $user_cloak);
                         }
                         
                         $properties = array(
                             "timestamp" => time(),
-                            "profileId" => $item["uuid"],
-                            "profileName" => $item["username"],
+                            "profileId" => $user_uuid,
+                            "profileName" => $user_name,
                             "textures" => $textures
                         );
                         
                         $user_data = array(
-                            "id" => $item["uuid"],
-                            "name" => $item["username"],
+                            "id" => $user_uuid,
+                            "name" => $user_name,
                             "properties" => array(
                                 array(
                                     "name" => "textures",
