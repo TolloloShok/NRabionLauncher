@@ -131,8 +131,10 @@ $("#run").click(() => {
         '\\libraries\\org\\apache\\logging\\log4j\\log4j-api\\2.0-beta9\\log4j-api-2.0-beta9.jar;' + minecraftDir +
         '\\libraries\\org\\apache\\logging\\log4j\\log4j-core\\2.0-beta9\\log4j-core-2.0-beta9.jar;' + minecraftDir +
         '\\libraries\\com\\mojang\\authlib\\1.5.24\\authlib-1.5.24.jar;' + minecraftDir +
-        '\\versions\\ForgeOptiFine 1.11\\ForgeOptiFine 1.11.jar" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy -Xmn128M net.minecraft.launchwrapper.Launch --username nnnn --version "ForgeOptiFine 1.11" --gameDir ' + minecraftDir +
-        ' --assetsDir ' + minecraftDir + '\\assets --assetIndex 1.11 --uuid 00000000-0000-0000-0000-000000000000 --accessToken null --userProperties [] --userType mojang --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge --width 925 --height 530',
+        '\\versions\\ForgeOptiFine 1.11\\ForgeOptiFine 1.11.jar"' +
+        ' -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy -Xmn128M net.minecraft.launchwrapper.Launch' +
+        ' --username nnnn --version "ForgeOptiFine 1.11" --gameDir "' + minecraftDir +
+        '" --assetsDir "' + minecraftDir + '\\assets" --assetIndex 1.11 --uuid 00000000-0000-0000-0000-000000000000 --accessToken null --userType mojang --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge --width 925 --height 530',
         {
             cwd: minecraftDir
         },
