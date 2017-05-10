@@ -75,17 +75,6 @@ function versionsCheck(data) {
     }
 }
 
-function requestDataClient(callback) {
-    // Get data for client update
-    http.get(url.resolve(consts.URL_BASE, 'data.json'), function(resource) {
-        resource.setEncoding('utf8')
-        resource.on('data', function (data) {
-            var data = JSON.parse(data)
-            callback(data)
-        })
-    })
-}
-
 $("#run").click(() => {
     let minecraftDir = mcUpdater.getDir()
 
@@ -163,4 +152,8 @@ $("#nrabion_link").click(() => {
 })
 
 // main
-requestDataClient(versionsCheck)
+downloader.downloadObject(url.resolve(consts.URL_BASE, 'data.json'))
+    .then(versionsCheck)
+    .catch((err) => {
+        alert(err.message)
+    })

@@ -1,4 +1,5 @@
 const request = require('request')
+const http = require('http')
 const fs = require('fs')
 
 function downloadFile(configuration) {
@@ -21,14 +22,14 @@ function downloadFile(configuration) {
         });
 
         // Get progress if callback exists
-        if(configuration.hasOwnProperty("onProgress")){
+        if (configuration.hasOwnProperty("onProgress")){
             req.on('data', function(chunk) {
                 // Update the received bytes
                 received_bytes += chunk.length;
 
                 configuration.onProgress(received_bytes, total_bytes);
             });
-        }else{
+        } else {
             req.on('data', function(chunk) {
                 // Update the received bytes
                 received_bytes += chunk.length;
@@ -41,4 +42,20 @@ function downloadFile(configuration) {
     });
 }
 
-module.exports = {downloadFile}
+function downloadObject(url_object) {
+    return new Promise(function(resolve, reject){
+        http.get(url_object, function(resource) {
+            var content = '';
+
+            resource.setEncoding('utf8')
+            resource.on('data', function (data) {
+                content += data;
+            });
+            resource.on('end', () => {
+                resolve(JSON.parse(content));
+            });
+        });
+    });
+}
+
+module.exports = {downloadFile, downloadObject}
