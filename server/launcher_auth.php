@@ -4,6 +4,8 @@
      * LAUNCHER LOGIC
      */
     
+    require_once('config.php');
+    
     if (!isset($_GET['action'])) {
         die();
     }
