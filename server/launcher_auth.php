@@ -13,44 +13,7 @@
     $action = $_GET['action'];
     
     switch ($action) {
-        
-        // Launcher-side: Register
-        
-        /*case "register":
-            if (isset($_POST['username']) && isset($_POST['password'])) {
-                $username = $_POST['username'];
-                $password = get_pass_hash($_POST['password']);
-                $uuid = uuid_from_nickname($username);
-                
-                if (!preg_match("/^[a-zA-Z0-9_]+$/", $username)) {
-                    die('{"success": false, "errorMessage": "Некорректный никнейм! Разрешены символы: a-z, A-Z, 0-9 и _"}');
-                }
-                
-                // Check user exists
-                $stmt = $mysqli->prepare("SELECT `id` FROM {$DB_TABLE} WHERE `username` = ?");
-                $stmt->bind_param("s", $username);
-                if ($stmt->execute()) {
-                    $res = $stmt->get_result();
-                    $item = $res->fetch_array(MYSQLI_ASSOC);
-                    
-                    if ($item) {
-                        die('{"success": false, "errorMessage": "Такой пользователь уже существует!"}');
-                    }
-                }
-                
-                $stmt = $mysqli->prepare("INSERT INTO {$DB_TABLE}(`username`, `password`, `uuid`) VALUES (?, ?, ?)");
-                $stmt->bind_param("sss", $username, $password, $uuid);
-                
-                if ($stmt->execute()) {
-                    die('{"success": true}');
-                } else {
-                    die('{"success": false, "errorMessage": "Ошибка при запросе к БД!"}');
-                }
-            } else {
-                die('{"success": false, "errorMessage": "Некорректный запрос!"}');
-            }
-            break;*/
-        
+
         // Launcher-side: Login
         
         case "login":
@@ -62,15 +25,15 @@
                     die('{"success": false, "errorMessage": "Некорректный никнейм! Разрешены символы: a-z, A-Z, 0-9 и _"}');
                 }
                 
-                $stmt = $mysqli->prepare("SELECT `user_login`, `password` FROM {$DB_TABLE_WP_USERS} WHERE `user_login` = ?");
+                $stmt = $mysqli->prepare("SELECT `user_login`, `user_pass` FROM {$DB_TABLE_WP_USERS} WHERE `user_login` = ?");
                 $stmt->bind_param("s", $username);
                 
                 if ($stmt->execute()) {
-                    $res = $stmt->get_result();
-                    $item = $res->fetch_array(MYSQLI_ASSOC);
+                    $stmt->bind_result($user_name, $user_pass);
                     
-                    if ($item && check_pass_hash($password, $item["password"])) {
-                        $user_name = $item["user_login"];
+                    if ($stmt->fetch() && check_pass_hash($password, $user_pass)) {
+                        $stmt->close();
+                        
                         $access_token = generate_access_token();
                         $uuid = uuid_from_nickname($user_name);
                         
@@ -78,18 +41,18 @@
                         $stmt = $mysqli->prepare("SELECT `id`, `uuid` FROM {$DB_TABLE} WHERE `username` = ?");
                         $stmt->bind_param("s", $user_name);
                         $stmt->execute();
-                        $res = $stmt->get_result();
+                        $stmt->bind_result($user_id, $user_uuid);
                         
                         // If exists
-                        if ($res->num_rows > 0) {
-                            $item = $res->fetch_array(MYSQLI_ASSOC);
+                        if ($stmt->fetch()) {
+                            $stmt->close();
                             
                             // Rewrite $uuid
-                            $uuid = $item["uuid"];
+                            $uuid = $user_uuid;
                             
                             // Update access token
                             $stmt = $mysqli->prepare("UPDATE {$DB_TABLE} SET `accessToken` = ? WHERE `id` = ?");
-                            $stmt->bind_param("si", $access_token, $item["id"]);
+                            $stmt->bind_param("si", $access_token, $user_id);
                             $stmt->execute();
                         } else {
                             $stmt = $mysqli->prepare("INSERT INTO {$DB_TABLE}(`username`, `accessToken`, `uuid`) VALUES (?, ?, ?)");
