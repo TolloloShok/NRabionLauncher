@@ -14,7 +14,7 @@
         
         // Launcher-side: Register
         
-        case "register":
+        /*case "register":
             if (isset($_POST['username']) && isset($_POST['password'])) {
                 $username = $_POST['username'];
                 $password = get_pass_hash($_POST['password']);
@@ -47,7 +47,7 @@
             } else {
                 die('{"success": false, "errorMessage": "Некорректный запрос!"}');
             }
-            break;
+            break;*/
         
         // Launcher-side: Login
         
@@ -60,7 +60,7 @@
                     die('{"success": false, "errorMessage": "Некорректный никнейм! Разрешены символы: a-z, A-Z, 0-9 и _"}');
                 }
                 
-                $stmt = $mysqli->prepare("SELECT `id`, `username`, `password`, `uuid` FROM {$DB_TABLE} WHERE `username` = ?");
+                $stmt = $mysqli->prepare("SELECT `user_login`, `password` FROM {$DB_TABLE_WP_USERS} WHERE `user_login` = ?");
                 $stmt->bind_param("s", $username);
                 
                 if ($stmt->execute()) {
@@ -68,15 +68,38 @@
                     $item = $res->fetch_array(MYSQLI_ASSOC);
                     
                     if ($item && check_pass_hash($password, $item["password"])) {
+                        $user_name = $item["user_login"];
                         $access_token = generate_access_token();
-                        $item["accessToken"] = $access_token;
-                        $item["success"] = true;
+                        $uuid = uuid_from_nickname($user_name);
                         
-                        // Update access token
-                        $mysqli->query("UPDATE {$DB_TABLE} SET `accessToken` = '{$access_token}' WHERE `id` = {$item["id"]}");
+                        // Check if exists row
+                        $stmt = $mysqli->prepare("SELECT `id`, `accessToken` FROM {$DB_TABLE} WHERE `username` = ?");
+                        $stmt->bind_param("s", $user_name);
+                        $stmt->execute();
+                        $res = $stmt->get_result();
+                        $item = $res->fetch_array(MYSQLI_ASSOC);
                         
-                        unset($item["id"]); // remove id from response
-                        die(json_encode($item));
+                        // If exists
+                        if ($res->num_rows > 0) {
+                            // Update access token
+                            $stmt = $mysqli->prepare("UPDATE {$DB_TABLE} SET `accessToken` = ? WHERE `id` = ?");
+                            $stmt->bind_param("si", $access_token, $item["id"]);
+                            $stmt->execute();
+                            
+                            // Rewrite $uuid
+                            $uuid = $item["uuid"];
+                        } else {
+                            $stmt = $mysqli->prepare("INSERT INTO {$DB_TABLE}(`username`, `accessToken`, `uuid`) VALUES (?, ?, ?)");
+                            $stmt->bind_param("sss", $user_name, $access_token, $uuid);
+                            $stmt->execute();
+                        }
+                        
+                        die(json_encode(array(
+                            "success" => true,
+                            "accessToken" => $access_token,
+                            "username" => $user_name,
+                            "uuid" => $uuid
+                        )));
                     } else {
                         die('{"success": false, "errorMessage": "Ошибка в имени пользователя или пароле!"}');
                     }

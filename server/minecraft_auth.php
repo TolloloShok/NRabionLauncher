@@ -23,8 +23,6 @@
                 $selected_profile = $data["selectedProfile"];
                 $server_id = $data["serverId"];
                 
-                //file_put_contents('log.txt', $strData.PHP_EOL , FILE_APPEND);
-                
                 $stmt = $mysqli->prepare("SELECT `id` FROM {$DB_TABLE} WHERE `uuid` = ? AND `accessToken` = ?");
                 $stmt->bind_param("ss", $selected_profile, $access_token);
                 
@@ -33,7 +31,7 @@
                     $item = $res->fetch_array(MYSQLI_ASSOC);
                     
                     if ($item) {
-                        // Update access token
+                        // Update serverId token
                         $stmt = $mysqli->prepare("UPDATE {$DB_TABLE} SET `serverID` = ? WHERE `id` = ?");
                         $stmt->bind_param("si", $server_id, $item["id"]);
                         $stmt->execute();
@@ -66,7 +64,7 @@
                     if ($item) {
                         $textures = array("SKIN" => array("url" => $item["skin"]));
                         
-                        // if cloak exists then add to textures
+                        // If cloak exists then add to textures
                         if (strlen(trim($item["cloak"])) > 0) {
                             $textures["CAPE"] = array("url" => $item["cloak"]);
                         }
@@ -89,7 +87,6 @@
                             )
                         );
                         
-                        //file_put_contents('log.txt', json_encode($user_data).PHP_EOL , FILE_APPEND);
                         die(json_encode($user_data));
                     } else {
                         die();
