@@ -8,10 +8,52 @@ const extract = require('extract-zip')
 const consts = require('./consts.js')
 const downloader = require('./download.js')
 
+const minecraftDirectory = path.join(process.env.APPDATA, consts.MINECRAFT_DIR_NAME)
+
+class UpdaterLauncher {
+
+    constructor() {
+        this.minecraftDir = minecraftDirectory
+    }
+
+    checkUpdate(data, currentVersion) {
+        return currentVersion === undefined || currentVersion != data.launcher_version;
+    }
+
+    update(data, options) {
+        let localFileName = path.join(this.minecraftDir, data.launcher_setup)
+        let remoteFileName = url.resolve(consts.URL_BASE, data.launcher_setup)
+
+        downloader.downloadFile({
+            localFile: localFileName,
+            remoteFile: remoteFileName,
+            onProgress: (received_bytes, total_bytes) => {
+                var percent = (received_bytes * 100) / total_bytes
+                if (options.onProgress) {
+                    options.onProgress(percent)
+                }
+            }
+        }).then(() => {
+            if (options.onSuccess) {
+                options.onSuccess(localFileName)
+            }
+            if (options.onFinish) {
+                options.onFinish()
+            }
+        }).catch((err) => {
+            alert(err.message)
+            if (options.onFinish) {
+                options.onFinish()
+            }
+        })
+    }
+
+}
+
 class UpdaterMinecraft {
 
     constructor() {
-        this.minecraftDir = path.join(process.env.APPDATA, consts.MINECRAFT_DIR_NAME)
+        this.minecraftDir = minecraftDirectory
 
         // Create MC dir
         if (!fs.existsSync(this.minecraftDir)) {
@@ -21,6 +63,10 @@ class UpdaterMinecraft {
 
     getDir() {
         return this.minecraftDir;
+    }
+
+    checkUpdate(data, currentVersion) {
+        return currentVersion === undefined || currentVersion != data.version;
     }
 
     updateFull(data, options) {
@@ -85,4 +131,4 @@ class UpdaterMinecraft {
 
 }
 
-module.exports = {UpdaterMinecraft}
+module.exports = {UpdaterMinecraft, UpdaterLauncher}

@@ -8,12 +8,13 @@ let child_process = require('child_process')
 
 const CONFIG_VERSION_LAUNCHER = "version_minecraft"
 
-const {UpdaterMinecraft} = require("./updater.js")
+const {UpdaterMinecraft, UpdaterLauncher} = require("./updater.js")
 const pager = require("./pager.js")
 const consts = require('./consts.js')
 const downloader = require('./download.js')
 
 let mcUpdater = new UpdaterMinecraft()
+let launcherUpdater = new UpdaterLauncher()
 
 nconf.use('file', { file: path.join(mcUpdater.getDir(), 'launcher_config.json') })
 nconf.load()
@@ -22,31 +23,31 @@ function versionsCheck(data) {
     let version = nconf.get(CONFIG_VERSION_LAUNCHER)
 
     // check launcher updates
-    if (window.launcherVersion != data.launcher_version) {
+    if (launcherUpdater.checkUpdate(data, window.launcherVersion)) {
         pager.show(pager.PAGE_DOWNLOAD_LAUNCHER)
 
         let divDownloadLauncher = $("#download_launcher")
-        let localFileName = path.join(mcUpdater.getDir(), data.launcher_setup)
-        let remoteFileName = url.resolve(consts.URL_BASE, data.launcher_setup)
 
-        downloader.downloadFile({
-            localFile: localFileName,
-            remoteFile: remoteFileName,
-            onProgress: (received_bytes, total_bytes) => {
-                divDownloadLauncher.text("Received: " + received_bytes + " / " + total_bytes)
-            }
-        }).then(() => {
-            child_process.exec('"' + localFileName + '"')
-            window.mainWindow.close()
-        }).catch((err) => {
-            alert(err.message)
-            window.mainWindow.close()
-        })
+        launcherUpdater.update(
+            data,
+            {
+                onProgress: (progress) => {
+                    divDownloadLauncher.text("Progress: " + progress)
+                },
+                onSuccess: (localFileName) => {
+                    child_process.exec('"' + localFileName + '"')
+                },
+                onFinish: () => {
+                    setTimeout(() => {
+                        window.mainWindow.close()
+                    }, 500)
+                }
+            })
         return;
     }
 
     // check minecraft updates
-    if (version === undefined || version != data.version) {
+    if (mcUpdater.checkUpdate(data, version)) {
         pager.show(pager.PAGE_DOWNLOAD)
 
         let divDownloadItems = $("#download_items");
@@ -151,9 +152,15 @@ $("#run").click(() => {
             window.mainWindow.restore()
         })
 
-    window.mainWindow.minimize()
+    setTimeout(() => {
+        window.mainWindow.minimize()
+    }, 1500)
 })
 
+$("#nrabion_link").click(() => {
+    const {shell} = require('electron')
+    shell.openExternal('https://vk.com/nrabion')
+})
 
 // main
 requestDataClient(versionsCheck)
