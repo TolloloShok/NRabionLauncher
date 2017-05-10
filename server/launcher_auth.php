@@ -73,21 +73,22 @@
                         $uuid = uuid_from_nickname($user_name);
                         
                         // Check if exists row
-                        $stmt = $mysqli->prepare("SELECT `id`, `accessToken` FROM {$DB_TABLE} WHERE `username` = ?");
+                        $stmt = $mysqli->prepare("SELECT `id`, `uuid` FROM {$DB_TABLE} WHERE `username` = ?");
                         $stmt->bind_param("s", $user_name);
                         $stmt->execute();
                         $res = $stmt->get_result();
-                        $item = $res->fetch_array(MYSQLI_ASSOC);
                         
                         // If exists
                         if ($res->num_rows > 0) {
+                            $item = $res->fetch_array(MYSQLI_ASSOC);
+                            
+                            // Rewrite $uuid
+                            $uuid = $item["uuid"];
+                            
                             // Update access token
                             $stmt = $mysqli->prepare("UPDATE {$DB_TABLE} SET `accessToken` = ? WHERE `id` = ?");
                             $stmt->bind_param("si", $access_token, $item["id"]);
                             $stmt->execute();
-                            
-                            // Rewrite $uuid
-                            $uuid = $item["uuid"];
                         } else {
                             $stmt = $mysqli->prepare("INSERT INTO {$DB_TABLE}(`username`, `accessToken`, `uuid`) VALUES (?, ?, ?)");
                             $stmt->bind_param("sss", $user_name, $access_token, $uuid);
