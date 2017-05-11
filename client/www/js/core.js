@@ -64,7 +64,7 @@ function versionsCheck(data) {
                     divDownloadItems.append("Start: ").append(name).append('<br>')
                 },
                 callbackProgressDownload: (name, progress) => {
-                    divDownloadItemsProgress.val(name + " " + progress + " %")
+                    divDownloadItemsProgress.text(name + " " + progress + " %")
                 },
                 callbackFileDownloadComplete: (name) => {
                     divDownloadItems.append("Finish: ").append(name).append('<br>')
@@ -129,8 +129,8 @@ $("#btnLogin").click(() => {
 })
 
 // main
-downloader.downloadObject(url.resolve(consts.URL_BASE, 'data.json'))
-    .then(versionsCheck)
-    .catch((err) => {
-        alert(err.message)
+rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
+    .then((body) => {
+        let data = JSON.parse(body)
+        versionsCheck(data)
     })

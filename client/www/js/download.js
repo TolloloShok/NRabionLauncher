@@ -42,7 +42,7 @@ function downloadFile(configuration) {
     });
 }
 
-function downloadObject(url_object) {
+/*function downloadObject(url_object) {
     return new Promise(function(resolve, reject){
         http.get(url_object, function(resource) {
             var content = '';
@@ -56,6 +56,6 @@ function downloadObject(url_object) {
             });
         });
     });
-}
+}*/
 
-module.exports = {downloadFile, downloadObject}
+module.exports = {downloadFile}

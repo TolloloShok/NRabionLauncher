@@ -22,7 +22,7 @@ class UpdaterLauncher {
 
     update(data, options) {
         let localFileName = path.join(this.minecraftDir, data.launcher_setup)
-        let remoteFileName = url.resolve(consts.URL_BASE, data.launcher_setup)
+        let remoteFileName = url.resolve(consts.URL_LAUNCHER, data.launcher_setup)
 
         /*if (fs.existsSync(localFileName)) {
             if (options.onSuccess) {
