@@ -13,6 +13,7 @@ const {MinecraftRunner} = require("./minecraft.js")
 const pager = require("./pager.js")
 const consts = require('./consts.js')
 const downloader = require('./download.js')
+const rest_api = require("./rest.js")
 
 let mcUpdater = new UpdaterMinecraft()
 let launcherUpdater = new UpdaterLauncher()
@@ -76,22 +77,53 @@ function versionsCheck(data) {
     }
 }
 
+// events
+
+var currentProfile = null
+
 $("#run").click(() => {
-    new MinecraftRunner().run({
-        onStart: () => {
-            pager.show(pager.PAGE_PLAYING)
-            setTimeout(() => { window.mainWindow.minimize() }, 1500)
-        },
-        onFinish: () => {
-            pager.show(pager.PAGE_ACCOUNT)
-            window.mainWindow.restore()
-        }
-    })
+    if (currentProfile) {
+        new MinecraftRunner(currentProfile.username,
+                            currentProfile.uuid,
+                            currentProfile.accessToken)
+            .run({
+                onStart: () => {
+                    pager.show(pager.PAGE_PLAYING)
+                    setTimeout(() => { window.mainWindow.minimize() }, 1500)
+                },
+                onFinish: () => {
+                    pager.show(pager.PAGE_ACCOUNT)
+                    window.mainWindow.restore()
+                }
+            })
+    }
 })
 
 $("#nrabion_link").click(() => {
     const {shell} = require('electron')
     shell.openExternal('https://vk.com/nrabion')
+})
+
+$("#btnLogin").click(() => {
+    pager.show(pager.PAGE_LOADING)
+
+    rest_api.makePOST(consts.URL_AUTH_LOGIN,
+        {
+            username: $("#username").val(),
+            password: $("#password").val()
+        })
+        .then((body) => {
+            let data = JSON.parse(body)
+
+            if (data.success) {
+                currentProfile = data
+
+                pager.show(pager.PAGE_ACCOUNT)
+            } else {
+                pager.show(pager.PAGE_AUTH)
+                alert(data.errorMessage)
+            }
+        })
 })
 
 // main

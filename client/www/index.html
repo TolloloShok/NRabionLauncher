@@ -8,29 +8,31 @@
     <body>
         <main>
             <div class="page" data-page="loading">
-                Wait...
+                Грузится
             </div>
             <div class="page hidden" data-page="download">
-                download
+                Загрузка клиента
                 <div id="download_items"></div>
             </div>
             <div class="page hidden" data-page="download_launcher">
-                download launcher
+                Обновление лаунчера
                 <div id="download_launcher"></div>
             </div>
             <div class="page hidden" data-page="auth">
-                
+                <input id="username" type="text" name="username">
+                <input id="password" type="password" name="password">
+                <button id="btnLogin">Вход</button>
             </div>
             <div class="page hidden" data-page="account">
-                Logined. Press GO to run
-                <button id="run">GO</button>
+                Вы авторизованы! Гж гж..
+                <button id="run">Играть!</button>
             </div>
             <div class="page hidden" data-page="playing">
-                YOU PLAYING!
+                Вы в игре! Дождитесь запуска игры, а это окно можно свернуть.
             </div>
         </main>
         <footer>
-            <small>Создано командой разработчиков <a id="nrabion_link" href="#">[N]-Rabion</a></small>
+            <small>Версия лаунчера <span id="version"></span> / <a id="nrabion_link" href="#">[N]-Rabion</a></small>
         </footer>
     </body>
     <script>
@@ -38,7 +40,8 @@
         let version = remote.getGlobal('sharedObj').version
         let mainWindow = remote.getCurrentWindow()
 
-        document.title = document.title + " v" + version
+        document.getElementById("version").innerText = version
+
         window.launcherVersion = version
         window.mainWindow = mainWindow
 

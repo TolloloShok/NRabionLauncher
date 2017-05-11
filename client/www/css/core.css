@@ -3,6 +3,10 @@ html, body {
     padding: 0;
 }
 
+a {
+    text-decoration: none;
+}
+
 .page {
     position: absolute;
     color: red;
