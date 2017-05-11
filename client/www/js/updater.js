@@ -131,4 +131,4 @@ class UpdaterMinecraft {
 
 }
 
-module.exports = {UpdaterMinecraft, UpdaterLauncher}
+module.exports = {UpdaterMinecraft, UpdaterLauncher, minecraftDirectory}

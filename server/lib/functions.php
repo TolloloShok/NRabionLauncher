@@ -45,11 +45,13 @@
         return $uuid;
     }
     
+    // integration with wordpress
     function get_pass_hash($pass) {
         global $wp_hasher;
         return $wp_hasher->HashPassword(trim($pass));
     }
     
+    // integration with wordpress
     function check_pass_hash($pass, $hash) {
         global $wp_hasher;
         return $wp_hasher->CheckPassword($pass, $hash);
