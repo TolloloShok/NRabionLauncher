@@ -37,12 +37,14 @@ function versionsCheck(data) {
                     divDownloadLauncher.text("Progress: " + progress)
                 },
                 onSuccess: (localFileName) => {
-                    child_process.exec('"' + localFileName + '"')
+                    setTimeout(() => {
+                        child_process.exec('"' + localFileName + '"')
+                    }, 300)
                 },
                 onFinish: () => {
                     setTimeout(() => {
                         window.mainWindow.close()
-                    }, 500)
+                    }, 700)
                 }
             })
         return;
@@ -52,7 +54,9 @@ function versionsCheck(data) {
     if (mcUpdater.checkUpdate(data, version)) {
         pager.show(pager.PAGE_DOWNLOAD)
 
-        let divDownloadItems = $("#download_items");
+        let divDownloadItems = $("#download_items")
+        let divDownloadItemsProgress = $("#download_items_progress")
+
         mcUpdater.updateFull(
             data,
             {
@@ -60,7 +64,7 @@ function versionsCheck(data) {
                     divDownloadItems.append("Start: ").append(name).append('<br>')
                 },
                 callbackProgressDownload: (name, progress) => {
-                    console.info(name, progress)
+                    divDownloadItemsProgress.val(name + " " + progress + " %")
                 },
                 callbackFileDownloadComplete: (name) => {
                     divDownloadItems.append("Finish: ").append(name).append('<br>')
@@ -105,8 +109,6 @@ $("#nrabion_link").click(() => {
 })
 
 $("#btnLogin").click(() => {
-    pager.show(pager.PAGE_LOADING)
-
     rest_api.makePOST(consts.URL_AUTH_LOGIN,
         {
             username: $("#username").val(),

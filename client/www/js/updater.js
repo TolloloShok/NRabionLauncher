@@ -24,6 +24,16 @@ class UpdaterLauncher {
         let localFileName = path.join(this.minecraftDir, data.launcher_setup)
         let remoteFileName = url.resolve(consts.URL_BASE, data.launcher_setup)
 
+        /*if (fs.existsSync(localFileName)) {
+            if (options.onSuccess) {
+                options.onSuccess(localFileName)
+            }
+            if (options.onFinish) {
+                options.onFinish()
+            }
+            return;
+        }*/
+
         downloader.downloadFile({
             localFile: localFileName,
             remoteFile: remoteFileName,

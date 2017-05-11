@@ -8,15 +8,19 @@
     <body>
         <main>
             <div class="page" data-page="loading">
-                Грузится
-            </div>
-            <div class="page hidden" data-page="download">
-                Загрузка клиента
-                <div id="download_items"></div>
+                Подождите...
             </div>
             <div class="page hidden" data-page="download_launcher">
                 Обновление лаунчера
                 <div id="download_launcher"></div>
+            </div>
+            <div class="page hidden" data-page="start_update_launcher">
+                Подождите пока производится обновление лаунчера
+            </div>
+            <div class="page hidden" data-page="download">
+                Загрузка клиента
+                <div id="download_items_progress"></div>
+                <div id="download_items"></div>
             </div>
             <div class="page hidden" data-page="auth">
                 <input id="username" type="text" name="username">
@@ -24,7 +28,7 @@
                 <button id="btnLogin">Вход</button>
             </div>
             <div class="page hidden" data-page="account">
-                Вы авторизованы! Гж гж..
+                Тут будет информация об аккаунте.
                 <button id="run">Играть!</button>
             </div>
             <div class="page hidden" data-page="playing">
