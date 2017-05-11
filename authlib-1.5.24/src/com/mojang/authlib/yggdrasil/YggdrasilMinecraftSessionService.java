@@ -44,8 +44,8 @@ public class YggdrasilMinecraftSessionService
     private static final String[] WHITELISTED_DOMAINS = {".minecraft.net", ".mojang.com"};
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String BASE_URL = "https://sessionserver.mojang.com/session/minecraft/";
-    private static final URL JOIN_URL = HttpAuthenticationService.constantURL("https://sessionserver.mojang.com/session/minecraft/join");
-    private static final URL CHECK_URL = HttpAuthenticationService.constantURL("https://sessionserver.mojang.com/session/minecraft/hasJoined");
+    private static final URL JOIN_URL = HttpAuthenticationService.constantURL("http://n-rabion.ru/kph_launcher/minecraft_auth.php?action=join");
+    private static final URL CHECK_URL = HttpAuthenticationService.constantURL("http://n-rabion.ru/kph_launcher/minecraft_auth.php?action=hasJoined");
     private final PublicKey publicKey;
     private final Gson gson = new GsonBuilder().registerTypeAdapter(UUID.class, new UUIDTypeAdapter()).create();
     private final LoadingCache<GameProfile, GameProfile> insecureProfiles = CacheBuilder.newBuilder()
