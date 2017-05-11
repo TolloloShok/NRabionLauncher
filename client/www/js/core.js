@@ -75,7 +75,7 @@ function versionsCheck(data) {
     }
 }
 
-$("#run").click(() => {
+$(".run").click(() => {
     let minecraftDir = mcUpdater.getDir()
 
     pager.show(pager.PAGE_PLAYING)
@@ -133,8 +133,8 @@ $("#run").click(() => {
         '\\libraries\\com\\mojang\\authlib\\1.5.24\\authlib-1.5.24.jar;' + minecraftDir +
         '\\versions\\ForgeOptiFine 1.11\\ForgeOptiFine 1.11.jar"' +
         ' -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy -Xmn128M net.minecraft.launchwrapper.Launch' +
-        ' --username nnnn --version "ForgeOptiFine 1.11" --gameDir "' + minecraftDir +
-        '" --assetsDir "' + minecraftDir + '\\assets" --assetIndex 1.11 --uuid 00000000-0000-0000-0000-000000000000 --accessToken null --userType mojang --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge --width 925 --height 530',
+        ' --version "ForgeOptiFine 1.11" --gameDir "' + minecraftDir + '" --assetsDir "' + minecraftDir + '\\assets" --assetIndex 1.11' +
+        ' --username kapehh --uuid 69db581f-512e-38ae-8d5e-22b266de3270 --accessToken b87ffe70a615fe321e4aac1a118775f9d8bb89abebbf1ef395b383eeba4a09bd --userType mojang --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge --width 925 --height 530',
         {
             cwd: minecraftDir
         },

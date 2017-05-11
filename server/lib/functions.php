@@ -32,6 +32,19 @@
         return $uuid;
     }
     
+    // fucking minecraft client, send invalid UUID
+    function getCorrectUUID($uuid) {
+        if (strpos($uuid, "-") === false) {
+            return sprintf("%s-%s-%s-%s-%s",
+                substr($uuid, 0, 8),
+                substr($uuid, 8, 4),
+                substr($uuid, 12, 4),
+                substr($uuid, 16, 4),
+                substr($uuid, 20, 12));
+        }
+        return $uuid;
+    }
+    
     function get_pass_hash($pass) {
         global $wp_hasher;
         return $wp_hasher->HashPassword(trim($pass));

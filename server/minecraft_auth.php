@@ -22,7 +22,7 @@
                 $strData = file_get_contents('php://input');
                 $data = json_decode($strData, TRUE);
                 $access_token = $data["accessToken"];
-                $selected_profile = $data["selectedProfile"];
+                $selected_profile = getCorrectUUID($data["selectedProfile"]);
                 $server_id = $data["serverId"];
                 
                 $stmt = $mysqli->prepare("SELECT `id` FROM {$DB_TABLE} WHERE `uuid` = ? AND `accessToken` = ?");
