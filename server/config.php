@@ -56,6 +56,6 @@
     $mysqli = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME, $DB_PORT);
     
     if ($mysqli->connect_errno) {
-        dir("Íå óäàëîñü ïîäêëþ÷èòüñÿ ê MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
+        dir("ÐÐµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡Ð¸Ñ‚ÑŒÑÑ Ðº MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
     }
     
