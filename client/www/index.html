@@ -50,8 +50,11 @@
         window.mainWindow = mainWindow
 
         window.onload = () => {
-            window.$ = window.jQuery = require('jquery');
-            require("./js/core.js");
+            // Wait for loading background image
+            setTimeout(() => {
+                window.$ = window.jQuery = require('jquery');
+                require("./js/core.js");
+            }, 128)
         }
     </script>
 </html>
