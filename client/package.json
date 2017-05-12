@@ -1,6 +1,6 @@
 {
   "name": "NRabionLauncher",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "Minecraft Launcher for [N]-Rabion",
   "main": "main.js",
   "scripts": {

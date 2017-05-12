@@ -5,6 +5,7 @@ let url = require('url')
 let nconf = require('nconf')
 let path = require('path')
 let child_process = require('child_process')
+const {shell} = require('electron')
 
 const CONFIG_VERSION_LAUNCHER = "version_minecraft"
 
@@ -37,14 +38,16 @@ function versionsCheck(data) {
                     divDownloadLauncher.text("Progress: " + progress)
                 },
                 onSuccess: (localFileName) => {
-                    setTimeout(() => {
+                    /*setTimeout(() => {
                         child_process.exec('"' + localFileName + '"')
-                    }, 300)
+                    }, 300)*/
+                    shell.openExternal('"' + localFileName + '"')
                 },
                 onFinish: () => {
-                    setTimeout(() => {
+                    /*setTimeout(() => {
                         window.mainWindow.close()
-                    }, 700)
+                    }, 700)*/
+                    window.mainWindow.close()
                 }
             })
         return;
@@ -86,7 +89,6 @@ function versionsCheck(data) {
 var currentProfile = null
 
 $("#nrabion_link").click(() => {
-    const {shell} = require('electron')
     shell.openExternal('https://vk.com/nrabion')
 })
 
