@@ -4,11 +4,12 @@
         <meta charset="UTF-8">
         <title>[N]-Rabion</title>
         <link rel="stylesheet" href="./css/core.css">
+        <link href="https://fonts.googleapis.com/css?family=Lobster|Marck+Script|Roboto" rel="stylesheet">
     </head>
     <body>
         <main>
             <div class="page" data-page="loading">
-                Подождите...
+                <h1>Подождите...</h1>
             </div>
             <div class="page hidden" data-page="download_launcher">
                 Обновление лаунчера
@@ -23,13 +24,16 @@
                 <div id="download_items"></div>
             </div>
             <div class="page hidden" data-page="auth">
-                <input id="username" type="text" name="username" placeholder="Логин">
-                <input id="password" type="password" name="password" placeholder="Пароль">
-                <button id="btnLogin">Вход</button>
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <input id="username" type="text" name="username" placeholder="Логин">
+                        <input id="password" type="password" name="password" placeholder="Пароль">
+                        <button id="btnLogin" class="btn-default">Вход</button>
+                    </div>
+                </div>
             </div>
             <div class="page hidden" data-page="account">
-                Тут будет информация об аккаунте.
-                <button id="run">Играть!</button>
+                <button id="run" class="btn-default">Играть!</button>
             </div>
             <div class="page hidden" data-page="playing">
                 Вы в игре! Дождитесь запуска игры, а это окно можно свернуть.
