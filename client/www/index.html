@@ -5,7 +5,8 @@
         <title>[N]-Rabion</title>
         <link rel="stylesheet" href="./css/core.css">
         <link rel="stylesheet" href="./css/loader.css">
-        <link href="https://fonts.googleapis.com/css?family=Lobster|Marck+Script|Roboto" rel="stylesheet">
+        <link rel="stylesheet" href="./css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Lobster|Roboto" rel="stylesheet">
     </head>
     <body>
         <main>
@@ -33,17 +34,28 @@
                     <div class="page-content">
                         <input id="username" type="text" name="username" placeholder="Логин">
                         <input id="password" type="password" name="password" placeholder="Пароль">
-                        <button id="btnLogin" class="btn-default">Вход</button>
+                        <button id="button-login" class="btn-default"><i class="fa fa-sign-in" aria-hidden="true"></i> Вход</button>
                     </div>
                 </div>
             </div>
 
             <div class="page hidden" data-page="account">
-                <button id="run" class="btn-default">Играть!</button>
+                <div class="page-header-container">
+                    <div class="title">
+                        Добро пожаловать, <span id="account-username" data-bind="username"></span>!
+                    </div>
+                    <div>
+                        <button id="button-run" class="btn-default"><i class="fa fa-play-circle" aria-hidden="true"></i> Играть!</button>
+                        <button id="button-exit" class="btn-default"><i class="fa fa-sign-out" aria-hidden="true"></i> Выйти</button>
+                    </div>
+                </div>
             </div>
 
             <div class="page hidden" data-page="playing">
-                Вы в игре! Дождитесь запуска игры, а это окно можно свернуть.
+                <div class="page-text">
+                    <p>Вы в игре! Дождитесь запуска игры.</p>
+                    <p>Окно лаунчера можно оставить свернутым на время игры. Либо закрыть, если необходимо.</p>
+                </div>
             </div>
         </main>
         <footer>

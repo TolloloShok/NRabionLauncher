@@ -85,7 +85,12 @@ function versionsCheck(data) {
 
 var currentProfile = null
 
-$("#run").click(() => {
+$("#nrabion_link").click(() => {
+    const {shell} = require('electron')
+    shell.openExternal('https://vk.com/nrabion')
+})
+
+$("#button-run").click(() => {
     if (currentProfile) {
         new MinecraftRunner(currentProfile.username,
                             currentProfile.uuid,
@@ -103,12 +108,7 @@ $("#run").click(() => {
     }
 })
 
-$("#nrabion_link").click(() => {
-    const {shell} = require('electron')
-    shell.openExternal('https://vk.com/nrabion')
-})
-
-$("#btnLogin").click(() => {
+$("#button-login").click(() => {
     rest_api.makePOST(consts.URL_AUTH_LOGIN,
         {
             username: $("#username").val(),
@@ -120,12 +120,17 @@ $("#btnLogin").click(() => {
             if (data.success) {
                 currentProfile = data
 
+                $("[data-bind=username]").text(data.username)
                 pager.show(pager.PAGE_ACCOUNT)
             } else {
                 pager.show(pager.PAGE_AUTH)
                 alert(data.errorMessage)
             }
         })
+})
+
+$("#button-exit").click(() => {
+    pager.show(pager.PAGE_AUTH)
 })
 
 // main
