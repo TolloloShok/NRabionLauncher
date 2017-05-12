@@ -4,25 +4,30 @@
         <meta charset="UTF-8">
         <title>[N]-Rabion</title>
         <link rel="stylesheet" href="./css/core.css">
+        <link rel="stylesheet" href="./css/loader.css">
         <link href="https://fonts.googleapis.com/css?family=Lobster|Marck+Script|Roboto" rel="stylesheet">
     </head>
     <body>
         <main>
             <div class="page" data-page="loading">
-                <h1>Подождите...</h1>
+                <div class="loader">Загрузка</div>
             </div>
+
             <div class="page hidden" data-page="download_launcher">
                 Обновление лаунчера
                 <div id="download_launcher"></div>
             </div>
+
             <div class="page hidden" data-page="start_update_launcher">
                 Подождите пока производится обновление лаунчера
             </div>
+
             <div class="page hidden" data-page="download">
                 Загрузка клиента
                 <div id="download_items_progress"></div>
                 <div id="download_items"></div>
             </div>
+
             <div class="page hidden" data-page="auth">
                 <div class="page-wrapper">
                     <div class="page-content">
@@ -32,9 +37,11 @@
                     </div>
                 </div>
             </div>
+
             <div class="page hidden" data-page="account">
                 <button id="run" class="btn-default">Играть!</button>
             </div>
+
             <div class="page hidden" data-page="playing">
                 Вы в игре! Дождитесь запуска игры, а это окно можно свернуть.
             </div>
