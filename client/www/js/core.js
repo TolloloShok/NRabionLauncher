@@ -88,11 +88,7 @@ function versionsCheck(data) {
 
 var currentProfile = null
 
-$("#nrabion_link").click(() => {
-    shell.openExternal('https://vk.com/nrabion')
-})
-
-$("#button-run").click(() => {
+function run_minecraft() {
     if (currentProfile) {
         new MinecraftRunner(currentProfile.username,
                             currentProfile.uuid,
@@ -108,9 +104,9 @@ $("#button-run").click(() => {
                 }
             })
     }
-})
+}
 
-$("#button-login").click(() => {
+function authorization() {
     rest_api.makePOST(consts.URL_AUTH_LOGIN,
         {
             username: $("#username").val(),
@@ -129,7 +125,21 @@ $("#button-login").click(() => {
                 alert(data.errorMessage)
             }
         })
+}
+
+$("#nrabion_link").click(() => {
+    shell.openExternal('https://vk.com/nrabion')
 })
+
+$("#username, #password").keydown((e) => {
+    if (e.keyCode == 13) {
+        authorization()
+    }
+})
+
+$("#button-run").click(run_minecraft)
+
+$("#button-login").click(authorization)
 
 $("#button-exit").click(() => {
     pager.show(pager.PAGE_AUTH)
