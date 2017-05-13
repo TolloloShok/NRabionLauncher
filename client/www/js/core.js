@@ -87,6 +87,7 @@ function versionsCheck(data) {
 // events
 
 var currentProfile = null
+var lockDoubleAuth = false
 
 function run_minecraft() {
     if (currentProfile) {
@@ -107,6 +108,9 @@ function run_minecraft() {
 }
 
 function authorization() {
+    if (lockDoubleAuth) return
+
+    lockDoubleAuth = true
     rest_api.makePOST(consts.URL_AUTH_LOGIN,
         {
             username: $("#username").val(),
@@ -124,6 +128,12 @@ function authorization() {
                 pager.show(pager.PAGE_AUTH)
                 alert(data.errorMessage)
             }
+
+            lockDoubleAuth = false
+        })
+        .catch((err) => {
+            alert(err.message)
+            lockDoubleAuth = false
         })
 }
 
