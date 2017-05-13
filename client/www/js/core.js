@@ -22,6 +22,12 @@ let launcherUpdater = new UpdaterLauncher()
 nconf.use('file', { file: path.join(mcUpdater.getDir(), 'launcher_config.json') })
 nconf.load()
 
+rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
+    .then((body) => {
+        let data = JSON.parse(body)
+        versionsCheck(data)
+    })
+
 function versionsCheck(data) {
     let version = nconf.get(CONFIG_VERSION_LAUNCHER)
 
@@ -154,10 +160,3 @@ $("#button-login").click(authorization)
 $("#button-exit").click(() => {
     pager.show(pager.PAGE_AUTH)
 })
-
-// main
-rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
-    .then((body) => {
-        let data = JSON.parse(body)
-        versionsCheck(data)
-    })
