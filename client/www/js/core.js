@@ -15,6 +15,7 @@ const pager = require("./pager.js")
 const consts = require('./consts.js')
 const downloader = require('./download.js')
 const rest_api = require("./rest.js")
+const {LoadingButton, DownloadItemProgress} = require("./components.js")
 
 let mcUpdater = new UpdaterMinecraft()
 let launcherUpdater = new UpdaterLauncher()
@@ -92,6 +93,11 @@ function versionsCheck(data) {
 
 // events
 
+let btnNrabionLink = $("#nrabion_link")
+let btnRunMinecraft = $("#button-run")
+let btnLogIn = $("#button-login")
+let btnLogOut = $("#button-exit")
+
 var currentProfile = null
 var lockDoubleAuth = false
 
@@ -117,6 +123,10 @@ function authorization() {
     if (lockDoubleAuth) return
 
     lockDoubleAuth = true
+    
+    let loadBtn = new LoadingButton(btnLogIn)
+    loadBtn.start()
+
     rest_api.makePOST(consts.URL_AUTH_LOGIN,
         {
             username: $("#username").val(),
@@ -136,16 +146,14 @@ function authorization() {
             }
 
             lockDoubleAuth = false
+            loadBtn.stop()
         })
         .catch((err) => {
             alert(err.message)
             lockDoubleAuth = false
+            loadBtn.stop()
         })
 }
-
-$("#nrabion_link").click(() => {
-    shell.openExternal('https://vk.com/nrabion')
-})
 
 $("#username, #password").keydown((e) => {
     if (e.keyCode == 13) {
@@ -153,10 +161,14 @@ $("#username, #password").keydown((e) => {
     }
 })
 
-$("#button-run").click(run_minecraft)
+btnNrabionLink.click(() => {
+    shell.openExternal('https://vk.com/nrabion')
+})
 
-$("#button-login").click(authorization)
+btnRunMinecraft.click(run_minecraft)
 
-$("#button-exit").click(() => {
+btnLogIn.click(authorization)
+
+btnLogOut.click(() => {
     pager.show(pager.PAGE_AUTH)
 })
