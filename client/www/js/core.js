@@ -36,25 +36,22 @@ function versionsCheck(data) {
     if (launcherUpdater.checkUpdate(data, window.launcherVersion)) {
         pager.show(pager.PAGE_DOWNLOAD_LAUNCHER)
 
-        let divDownloadLauncher = $("#download_launcher")
+        let divDownloadLauncher = $("#download-launcher-progress")
+        let downloadProgress = new DownloadItemProgress(divDownloadLauncher)
+        downloadProgress.title(data.launcher_setup)
 
         launcherUpdater.update(
             data,
             {
                 onProgress: (progress) => {
-                    divDownloadLauncher.text("Progress: " + progress)
+                    downloadProgress.progress(progress)
                 },
                 onSuccess: (localFileName) => {
-                    /*setTimeout(() => {
-                        child_process.exec('"' + localFileName + '"')
-                    }, 300)*/
-                    shell.openExternal('"' + localFileName + '"')
-                },
-                onFinish: () => {
-                    /*setTimeout(() => {
+                    downloadProgress.complete()
+                    setTimeout(() => {
+                        shell.openExternal('"' + localFileName + '"')
                         window.mainWindow.close()
-                    }, 700)*/
-                    window.mainWindow.close()
+                    }, 1500)
                 }
             })
         return;
