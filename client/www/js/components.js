@@ -10,7 +10,11 @@ class DownloadItemProgress {
         this.progressBar.css("width", "0%")
 
         this.progressBar.append($('<div class="progress-offset-container">').append(this.itemProgress).append('%'))
-        this.item.append($('<div class="title-container">').append('File: ').append(this.itemTitle)).append(this.progressBar)
+        this.item.append($('<div class="title-container">')
+                .append('File: ')
+                .append(this.itemTitle)
+                .append('<i class="fa fa-refresh loading-spin progress-spinner" aria-hidden="true"></i>'))
+            .append(this.progressBar)
         container.append(this.item)
     }
 
@@ -24,7 +28,7 @@ class DownloadItemProgress {
 
     progress(newProgress) {
         if (newProgress) {
-            this.itemProgress.text(newProgress)
+            this.itemProgress.text(parseInt(newProgress))
             this.progressBar.css("width", newProgress + "%")
         } else {
             return this.itemProgress.text()

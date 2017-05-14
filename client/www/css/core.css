@@ -9,6 +9,8 @@ html, body {
 
 h1 {
     font-family: 'Lobster', cursive;
+    color: white;
+    text-align: center;
 }
 
 body {
@@ -151,6 +153,14 @@ footer {
     background-color: rgba(36, 193, 36, 0.3);
 }
 
+.download-item.complete .title-container .progress-spinner {
+    display: none;
+}
+
+.download-item.complete .progress-container {
+    background-color: rgba(36, 193, 36, 0.7);
+}
+
 .download-item .progress-container {
     position: relative;
     background-color: rgba(53, 188, 255, 0.7);
@@ -168,8 +178,15 @@ footer {
 }
 
 .download-item .title-container {
+    position: relative;
     padding-bottom: 5px;
     color: #FFDD00;
+    font-style: italic;
+}
+
+.download-item .title-container .progress-spinner {
+    position: absolute;
+    right: 0;
 }
 
 @keyframes fadeIn {
