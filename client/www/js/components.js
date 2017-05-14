@@ -8,6 +8,7 @@ class DownloadItemProgress {
         this.progressBar = $('<div class="progress-container">')
 
         this.progressBar.css("width", "0%")
+        this.itemProgress.text("0")
 
         this.progressBar.append($('<div class="progress-offset-container">').append(this.itemProgress).append('%'))
         this.item.append($('<div class="title-container">')

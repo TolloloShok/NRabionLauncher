@@ -61,20 +61,21 @@ function versionsCheck(data) {
     if (mcUpdater.checkUpdate(data, version)) {
         pager.show(pager.PAGE_DOWNLOAD)
 
-        let divDownloadItems = $("#download_items")
-        let divDownloadItemsProgress = $("#download_items_progress")
+        let divDownloadItems = $("#download-client-progress")
+        var downloadProgress = null
 
         mcUpdater.updateFull(
             data,
             {
                 callbackFileDownload: (name) => {
-                    divDownloadItems.append("Start: ").append(name).append('<br>')
+                    downloadProgress = new DownloadItemProgress(divDownloadItems)
+                    downloadProgress.title(name)
                 },
                 callbackProgressDownload: (name, progress) => {
-                    divDownloadItemsProgress.text(name + " " + progress + " %")
+                    downloadProgress.progress(progress)
                 },
                 callbackFileDownloadComplete: (name) => {
-                    divDownloadItems.append("Finish: ").append(name).append('<br>')
+                    downloadProgress.complete()
                 },
                 callbackComplete: () => {
                     nconf.set(CONFIG_VERSION_LAUNCHER, data.version)

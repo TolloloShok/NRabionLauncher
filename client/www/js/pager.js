@@ -6,7 +6,6 @@ const PAGE_LOADING = 'loading'
 const PAGE_PLAYING = 'playing'
 const PAGE_DOWNLOAD_LAUNCHER = 'download_launcher'
 const PAGE_ACCOUNT = 'account'
-const PAGE_START_UPDATE_LAUNCHER = 'start_update_launcher'
 
 function show(page) {
     if (page == PAGE_AUTH) {
@@ -44,12 +43,6 @@ function show(page) {
     } else {
         $("div[data-page=" + PAGE_ACCOUNT + "]").addClass("hidden")
     }
-    
-    if (page == PAGE_START_UPDATE_LAUNCHER) {
-        $("div[data-page=" + PAGE_START_UPDATE_LAUNCHER + "]").removeClass("hidden")
-    } else {
-        $("div[data-page=" + PAGE_START_UPDATE_LAUNCHER + "]").addClass("hidden")
-    }
 }
 
 module.exports = {
@@ -59,6 +52,5 @@ module.exports = {
     PAGE_PLAYING,
     PAGE_DOWNLOAD_LAUNCHER,
     PAGE_ACCOUNT,
-    PAGE_START_UPDATE_LAUNCHER,
     show
 }
