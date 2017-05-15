@@ -8,6 +8,7 @@ let child_process = require('child_process')
 const {shell} = require('electron')
 
 const CONFIG_VERSION_LAUNCHER = "version_minecraft"
+const CONFIG_LAST_LOGIN = "last_login"
 
 const {UpdaterMinecraft, UpdaterLauncher} = require("./updater.js")
 const {MinecraftRunner} = require("./minecraft.js")
@@ -22,12 +23,6 @@ let launcherUpdater = new UpdaterLauncher()
 
 nconf.use('file', { file: path.join(mcUpdater.getDir(), 'launcher_config.json') })
 nconf.load()
-
-rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
-    .then((body) => {
-        let data = JSON.parse(body)
-        versionsCheck(data)
-    })
 
 function versionsCheck(data) {
     let version = nconf.get(CONFIG_VERSION_LAUNCHER)
@@ -95,6 +90,7 @@ let btnNrabionLink = $("#nrabion_link")
 let btnRunMinecraft = $("#button-run")
 let btnLogIn = $("#button-login")
 let btnLogOut = $("#button-exit")
+let btnReg = $("#button-registration")
 
 var currentProfile = null
 var lockDoubleAuth = false
@@ -136,6 +132,9 @@ function authorization() {
             if (data.success) {
                 currentProfile = data
 
+                nconf.set(CONFIG_LAST_LOGIN, data)
+                nconf.save()
+
                 $("[data-bind=username]").text(data.username)
                 pager.show(pager.PAGE_ACCOUNT)
             } else {
@@ -163,6 +162,10 @@ btnNrabionLink.click(() => {
     shell.openExternal('https://vk.com/nrabion')
 })
 
+btnReg.click(() => {
+    shell.openExternal('http://n-rabion.ru/register/')
+})
+
 btnRunMinecraft.click(run_minecraft)
 
 btnLogIn.click(authorization)
@@ -170,3 +173,25 @@ btnLogIn.click(authorization)
 btnLogOut.click(() => {
     pager.show(pager.PAGE_AUTH)
 })
+
+// main
+
+// check last login
+let last_login = nconf.get(CONFIG_LAST_LOGIN)
+
+if (last_login) {
+    $("#last-login-container").removeClass("hide")
+    $("#username-last-login").text(last_login.username)
+    $("#button-last-login").click(() => {
+        currentProfile = last_login
+        $("[data-bind=username]").text(currentProfile.username)
+        pager.show(pager.PAGE_ACCOUNT)
+    })
+}
+
+// loading data versions
+rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
+    .then((body) => {
+        let data = JSON.parse(body)
+        versionsCheck(data)
+    })

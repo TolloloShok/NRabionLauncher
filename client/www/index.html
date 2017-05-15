@@ -25,11 +25,21 @@
             </div>
 
             <div class="page hidden" data-page="auth">
-                <div class="page-wrapper">
-                    <div class="page-content">
+                <div class="page-center">
+                    <div class="block-items">
+                        <h1>Авторизация</h1>
                         <input id="username" type="text" name="username" placeholder="Логин">
                         <input id="password" type="password" name="password" placeholder="Пароль">
-                        <button id="button-login" class="btn-default"><i class="fa fa-sign-in" aria-hidden="true"></i> Вход</button>
+                        <div>
+                            <button id="button-login" class="btn-default"><i class="fa fa-sign-in" aria-hidden="true"></i> Вход</button>
+                            <button id="button-registration" class="btn-default">Регистрация</button>
+                        </div>
+                        <div id="last-login-container" class="hide">
+                            <div class="inline-text">или...</div>
+                            <button id="button-last-login" class="btn-default">
+                                <i class="fa fa-sign-in" aria-hidden="true"></i> Войти как <span id="username-last-login"></span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
