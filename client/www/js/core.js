@@ -49,7 +49,7 @@ function versionsCheck(data) {
                     }, 1500)
                 }
             })
-        return;
+        return
     }
 
     // check minecraft updates
@@ -76,12 +76,13 @@ function versionsCheck(data) {
                     nconf.set(CONFIG_VERSION_LAUNCHER, data.version)
                     nconf.save()
 
-                    pager.show(pager.PAGE_AUTH)
+                    openPageAuth()
                 }
             })
-    } else {
-        pager.show(pager.PAGE_AUTH)
+        return
     }
+
+    openPageAuth()
 }
 
 // events
@@ -91,9 +92,34 @@ let btnRunMinecraft = $("#button-run")
 let btnLogIn = $("#button-login")
 let btnLogOut = $("#button-exit")
 let btnReg = $("#button-registration")
+let btnLastLogin = $("#button-last-login")
+let txtBindUsername = $("[data-bind=username]")
+let divLastLogin = $("#last-login-container")
+let txtLastLoginUsername = $("#username-last-login")
 
 var currentProfile = null
 var lockDoubleAuth = false
+
+function openPageAccount() {
+    if (currentProfile) {
+        txtBindUsername.text(currentProfile.username)
+    }
+    pager.show(pager.PAGE_ACCOUNT)
+}
+
+function openPageAuth() {
+    let last_login = nconf.get(CONFIG_LAST_LOGIN)
+
+    if (last_login) {
+        divLastLogin.removeClass("hide")
+        txtLastLoginUsername.text(last_login.username)
+    } else {
+        divLastLogin.addClass("hide")
+        txtLastLoginUsername.text("")
+    }
+
+    pager.show(pager.PAGE_AUTH)
+}
 
 function run_minecraft() {
     if (currentProfile) {
@@ -106,7 +132,7 @@ function run_minecraft() {
                     setTimeout(() => { window.mainWindow.minimize() }, 1500)
                 },
                 onFinish: () => {
-                    pager.show(pager.PAGE_ACCOUNT)
+                    openPageAccount()
                     window.mainWindow.restore()
                 }
             })
@@ -135,10 +161,9 @@ function authorization() {
                 nconf.set(CONFIG_LAST_LOGIN, data)
                 nconf.save()
 
-                $("[data-bind=username]").text(data.username)
-                pager.show(pager.PAGE_ACCOUNT)
+                openPageAccount()
             } else {
-                pager.show(pager.PAGE_AUTH)
+                openPageAuth()
                 alert(data.errorMessage)
             }
 
@@ -171,25 +196,20 @@ btnRunMinecraft.click(run_minecraft)
 btnLogIn.click(authorization)
 
 btnLogOut.click(() => {
-    pager.show(pager.PAGE_AUTH)
+    openPageAuth()
+})
+
+btnLastLogin.click(() => {
+    let last_login = nconf.get(CONFIG_LAST_LOGIN)
+
+    if (last_login) {
+        currentProfile = last_login
+        openPageAccount()
+    }
 })
 
 // main
 
-// check last login
-let last_login = nconf.get(CONFIG_LAST_LOGIN)
-
-if (last_login) {
-    $("#last-login-container").removeClass("hide")
-    $("#username-last-login").text(last_login.username)
-    $("#button-last-login").click(() => {
-        currentProfile = last_login
-        $("[data-bind=username]").text(currentProfile.username)
-        pager.show(pager.PAGE_ACCOUNT)
-    })
-}
-
-// loading data versions
 rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
     .then((body) => {
         let data = JSON.parse(body)
