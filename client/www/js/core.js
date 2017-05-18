@@ -96,6 +96,7 @@ let btnLastLogin = $("#button-last-login")
 let txtBindUsername = $("[data-bind=username]")
 let divLastLogin = $("#last-login-container")
 let txtLastLoginUsername = $("#username-last-login")
+let btnSettings = $("#button-settings")
 
 var currentProfile = null
 var lockDoubleAuth = false
@@ -206,6 +207,10 @@ btnLastLogin.click(() => {
         currentProfile = last_login
         openPageAccount()
     }
+})
+
+btnSettings.click(() => {
+    $("#settings-window").removeClass("hide")
 })
 
 // main

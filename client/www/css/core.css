@@ -27,6 +27,10 @@ h3, h4 {
     display: block;
 }
 
+.block-items > .left {
+    text-align: left;
+}
+
 body {
     background-image: url('../img/background.jpg');
     background-size: cover;
@@ -244,6 +248,38 @@ footer {
     to {
         transform:rotate(360deg);
     }
+}
+
+.modal-window {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+}
+
+.modal-window h2 {
+    margin-top: 0;
+}
+
+.modal-scroll {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: scroll;
+    z-index: 10;
+}
+
+.modal-content {
+    width: 500px;
+    margin: 50px auto;
+    background-color: #353535;
+    padding: 20px;
+    box-sizing: border-box;
+    color: white;
 }
 
 /* Account */
