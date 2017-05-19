@@ -40,6 +40,57 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+p.center {
+    color: white;
+    text-align: center;
+}
+
+.vk-post {
+    background-color: rgba(37, 37, 37, 0.98);
+    padding: 15px;
+    border-radius: 4px;
+    color: white;
+    box-sizing: border-box;
+}
+
+@media screen and (min-width: 800px) {
+    .vk-post {
+        width: 800px;
+        margin: 0 auto;
+    }
+}
+
+.vk-group-wall {
+    padding: 30px 0;
+}
+
+.vk-post-img {
+    border-radius: 25px;
+}
+
+.vk-post-title {
+    color: #FFDD00;
+}
+
+.vk-post-date {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.vk-post-header {
+    height: 70px;
+}
+
+.vk-post-avatar {
+    position: absolute;
+    cursor: pointer;
+}
+
+.vk-post-info {
+    margin-left: 65px;
+    padding-top: 6px;
+    cursor: pointer;
+}
+
 .fa.loading-spin {
     animation: spin 1s infinite linear;
 }

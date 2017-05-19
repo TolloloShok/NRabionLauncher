@@ -100,6 +100,7 @@ let txtBindUsername = $("[data-bind=username]")
 let divLastLogin = $("#last-login-container")
 let txtLastLoginUsername = $("#username-last-login")
 let btnSettings = $("#button-settings")
+let lblLoadingState = $("#loading-state")
 
 var currentProfile = null
 var currentSettings = null
@@ -255,8 +256,16 @@ btnSettings.click(() => {
 
 currentSettings = nconf.get(CONFIG_SETTINGS)
 
-rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
+lblLoadingState.text("Загрузка новостей")
+rest_api.makeGET("https://api.vk.com/method/wall.get?owner_id=-134583593&count=5&filter=owner&extended=1&v=5.64")
     .then((body) => {
         let data = JSON.parse(body)
-        versionsCheck(data)
+        console.info(data)
+
+        lblLoadingState.text("Загрузка информации лаунчера")
+        rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
+            .then((body) => {
+                let data = JSON.parse(body)
+                versionsCheck(data)
+            })
     })

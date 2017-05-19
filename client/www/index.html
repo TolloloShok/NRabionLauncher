@@ -13,6 +13,7 @@
         <main>
             <div class="page" data-page="loading">
                 <div class="loader">Загрузка</div>
+                <p id="loading-state" class="center">Загрузка интерфейса</p>
             </div>
 
             <div class="page hidden" data-page="download_launcher">
@@ -54,6 +55,22 @@
                         <button id="button-run" class="btn-default success"><i class="fa fa-play-circle" aria-hidden="true"></i> Играть!</button>
                         <button id="button-settings" class="btn-default">Настройки</button>
                         <button id="button-exit" class="btn-default"><i class="fa fa-sign-out" aria-hidden="true"></i> Выйти</button>
+                    </div>
+                </div>
+                <div id="vk-group-wall" class="vk-group-wall">
+                    <div class="vk-post">
+                        <div class="vk-post-header">
+                            <div class="vk-post-avatar">
+                                <img class="vk-post-img" src="https://pp.userapi.com/c837538/v837538891/2344c/gCn7kkiesV4.jpg" alt="">
+                            </div>
+                            <div class="vk-post-info">
+                                <div class="vk-post-title">[N]-Rabion - Minecraft 1.11</div>
+                                <div class="vk-post-date">19 марта 2017 г.</div>
+                            </div>
+                        </div>
+                        <div class="vk-post-content">
+                            Здесь текст крч
+                        </div>
                     </div>
                 </div>
             </div>
@@ -104,7 +121,7 @@
             </div>
         </main>
         <footer>
-            <small>Версия лаунчера <span id="version"></span> / <a id="nrabion_link" href="#">[N]-Rabion</a></small>
+            <small>Версия лаунчера <span id="version"></span> // <a id="nrabion_link" href="#">[N]-Rabion</a> // by kapehh</small>
         </footer>
     </body>
     <script>
@@ -122,7 +139,7 @@
             setTimeout(() => {
                 window.$ = window.jQuery = require('jquery');
                 require("./js/core.js");
-            }, 200)
+            }, 300)
         }
     </script>
 </html>
