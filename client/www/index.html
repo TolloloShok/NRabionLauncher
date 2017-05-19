@@ -51,8 +51,8 @@
                         Добро пожаловать, <span id="account-username" data-bind="username"></span>!
                     </div>
                     <div>
-                        <button id="button-run" class="btn-default"><i class="fa fa-play-circle" aria-hidden="true"></i> Играть!</button>
-                        <button id="button-settings" class="btn-default"><i class="fa fa-list-alt" aria-hidden="true"></i> Настройки</button>
+                        <button id="button-run" class="btn-default success"><i class="fa fa-play-circle" aria-hidden="true"></i> Играть!</button>
+                        <button id="button-settings" class="btn-default">Настройки</button>
                         <button id="button-exit" class="btn-default"><i class="fa fa-sign-out" aria-hidden="true"></i> Выйти</button>
                     </div>
                 </div>
@@ -76,38 +76,21 @@
                     <li></li>
                   </ul>
                 </div>
-                <div class="modal-scroll">
+                <div class="modal-scroll" data-modal="modal-scroll">
                     <div class="modal-content">
                         <h2>Настройки</h2>
                         <div class="block-items">
+                            <span class="left">Параметр Xmx в мегабайтах (максимальное значение памяти под java)</span>
+                            <input id="mc-xmx" type="text">
+                            <span class="left">Ширина окна Minecraft</span>
+                            <input id="mc-width" type="text">
+                            <span class="left">Высота окна Minecraft</span>
+                            <input id="mc-height" type="text">
                             <div>
-                                <button class="btn-default">Save</button>
-                                <button class="btn-default">Save</button>
+                                <button class="btn-default success" data-modal="modal-ok">OK</button>
+                                <button class="btn-default" data-modal="modal-cancel">Отмена</button>
+                                <button class="btn-default" data-modal="modal-reset">Сброс</button>
                             </div>
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
-                            <span class="left">Логин:</span>
-                            <input id="username" type="text" name="username" placeholder="Логин">
                         </div>
                     </div>
                 </div>

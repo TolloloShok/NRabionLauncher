@@ -9,6 +9,7 @@ const {shell} = require('electron')
 
 const CONFIG_VERSION_LAUNCHER = "version_minecraft"
 const CONFIG_LAST_LOGIN = "last_login"
+const CONFIG_SETTINGS = "settings"
 
 const {UpdaterMinecraft, UpdaterLauncher} = require("./updater.js")
 const {MinecraftRunner} = require("./minecraft.js")
@@ -17,6 +18,8 @@ const consts = require('./consts.js')
 const downloader = require('./download.js')
 const rest_api = require("./rest.js")
 const {LoadingButton, DownloadItemProgress} = require("./components.js")
+const {ModalWindow} = require("./modal.js")
+const notif = require("./notifications.js")
 
 let mcUpdater = new UpdaterMinecraft()
 let launcherUpdater = new UpdaterLauncher()
@@ -99,6 +102,8 @@ let txtLastLoginUsername = $("#username-last-login")
 let btnSettings = $("#button-settings")
 
 var currentProfile = null
+var currentSettings = null
+
 var lockDoubleAuth = false
 
 function openPageAccount() {
@@ -124,9 +129,7 @@ function openPageAuth() {
 
 function run_minecraft() {
     if (currentProfile) {
-        new MinecraftRunner(currentProfile.username,
-                            currentProfile.uuid,
-                            currentProfile.accessToken)
+        new MinecraftRunner(currentProfile, currentSettings)
             .run({
                 onStart: () => {
                     pager.show(pager.PAGE_PLAYING)
@@ -210,10 +213,47 @@ btnLastLogin.click(() => {
 })
 
 btnSettings.click(() => {
-    $("#settings-window").removeClass("hide")
+    const defaultSettings = {
+        xmx: 1024,
+        width: 925,
+        height: 530
+    }
+
+    let modalSettings =
+        new ModalWindow($("#settings-window"), {
+            onPreventShow: () => {
+                if (currentSettings) {
+                    modalSettings.get("#mc-xmx").val(currentSettings.xmx ? currentSettings.xmx : defaultSettings.xmx)
+                    modalSettings.get("#mc-width").val(currentSettings.width ? currentSettings.width : defaultSettings.width)
+                    modalSettings.get("#mc-height").val(currentSettings.height ? currentSettings.height : defaultSettings.height)
+                } else {
+                    modalSettings.get("#mc-xmx").val(defaultSettings.xmx)
+                    modalSettings.get("#mc-width").val(defaultSettings.width)
+                    modalSettings.get("#mc-height").val(defaultSettings.height)
+                }
+            },
+            onSuccess: () => {
+                currentSettings = {}
+                currentSettings.xmx = modalSettings.get("#mc-xmx").val()
+                currentSettings.width = modalSettings.get("#mc-width").val()
+                currentSettings.height = modalSettings.get("#mc-height").val()
+                nconf.set(CONFIG_SETTINGS, currentSettings)
+                nconf.save()
+                notif.sendNotification("Настройки сохранены!", "Настройки успешно применены.")
+            },
+            onReset: () => {
+                modalSettings.get("#mc-xmx").val(defaultSettings.xmx)
+                modalSettings.get("#mc-width").val(defaultSettings.width)
+                modalSettings.get("#mc-height").val(defaultSettings.height)
+            }
+        })
+
+    modalSettings.show()
 })
 
 // main
+
+currentSettings = nconf.get(CONFIG_SETTINGS)
 
 rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
     .then((body) => {

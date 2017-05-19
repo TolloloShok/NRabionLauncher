@@ -63,7 +63,17 @@ body {
 .btn-default:hover {
     background: #FFDD00;
     border: 1px solid #FFDD00;
-    color: #303030 ;
+    color: #303030;
+}
+
+.btn-default.success {
+    border: 1px solid #17e20a;
+}
+
+.btn-default.success:hover {
+    background: #17e20a;
+    border: 1px solid #17e20a;
+    color: white;
 }
 
 input {

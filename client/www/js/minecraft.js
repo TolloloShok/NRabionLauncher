@@ -6,11 +6,29 @@ const {minecraftDirectory} = require("./updater.js")
 
 class MinecraftRunner {
 
-    constructor(username, uuid, accessToken) {
-        this.username = username
-        this.uuid = uuid
-        this.accessToken = accessToken
-        this.executeString = 'javaw -Xmx1024M "-Djava.library.path=' + minecraftDirectory +
+    constructor(data, settings) {
+        this.username = data.username
+        this.uuid = data.uuid
+        this.accessToken = data.accessToken
+        this.settings = {
+            xmx: 1024,
+            width: 925,
+            height: 530
+        }
+
+        if (settings) {
+            if (settings.xmx) {
+                this.settings.xmx = parseInt(settings.xmx)
+            }
+            if (settings.width) {
+                this.settings.width = parseInt(settings.width)
+            }
+            if (settings.height) {
+                this.settings.height = parseInt(settings.height)
+            }
+        }
+
+        this.executeString = 'javaw -Xmx' + this.settings.xmx + 'M -Xmn128M "-Djava.library.path=' + minecraftDirectory +
             '\\versions\\ForgeOptiFine 1.11\\natives" -cp "' + minecraftDirectory +
             '\\libraries\\net\\minecraftforge\\forge\\1.11-13.19.1.2189\\forge-1.11-13.19.1.2189.jar;' + minecraftDirectory +
             '\\libraries\\net\\minecraft\\launchwrapper\\1.12\\launchwrapper-1.12.jar;' + minecraftDirectory +
@@ -62,9 +80,10 @@ class MinecraftRunner {
             '\\libraries\\org\\apache\\logging\\log4j\\log4j-core\\2.0-beta9\\log4j-core-2.0-beta9.jar;' + minecraftDirectory +
             '\\libraries\\com\\mojang\\authlib\\1.5.24\\authlib-1.5.24.jar;' + minecraftDirectory +
             '\\versions\\ForgeOptiFine 1.11\\ForgeOptiFine 1.11.jar"' +
-            ' -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -Dorg.lwjgl.opengl.Display.allowSoftwareOpenGL=true -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy -Xmn128M net.minecraft.launchwrapper.Launch' +
+            ' -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -Dorg.lwjgl.opengl.Display.allowSoftwareOpenGL=true -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy net.minecraft.launchwrapper.Launch' +
             ' --version "ForgeOptiFine 1.11" --gameDir "' + minecraftDirectory + '" --assetsDir "' + minecraftDirectory + '\\assets" --assetIndex 1.11' +
-            ' --username ' + username + ' --uuid ' + uuid + ' --accessToken ' + accessToken + ' --userType mojang --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge --width 925 --height 530'
+            ' --username ' + this.username + ' --uuid ' + this.uuid + ' --accessToken ' + this.accessToken +
+            ' --userType mojang --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge --width ' + this.settings.width + ' --height ' + this.settings.height
     }
 
     run(options) {
