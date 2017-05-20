@@ -5,7 +5,8 @@ const {shell} = require('electron')
 function renderHTML(text) { 
     var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
 
-    var textWithLinks = text.replace(urlRegex, (url) => {   
+    var textPrepared = text.replace(/<(?:.|\n)*?>/gm, '')
+    var textWithLinks = textPrepared.replace(urlRegex, (url) => {   
         return '<a href="' + url + '">' + url + '</a>'
     })
     var textWithBr = textWithLinks.replace(/\n/g, "<br>")
