@@ -20,6 +20,7 @@ const rest_api = require("./rest.js")
 const {LoadingButton, DownloadItemProgress} = require("./components.js")
 const {ModalWindow} = require("./modal.js")
 const notif = require("./notifications.js")
+const {VkWall} = require("./vk.js")
 
 let mcUpdater = new UpdaterMinecraft()
 let launcherUpdater = new UpdaterLauncher()
@@ -260,7 +261,8 @@ lblLoadingState.text("Загрузка новостей")
 rest_api.makeGET("https://api.vk.com/method/wall.get?owner_id=-134583593&count=5&filter=owner&extended=1&v=5.64")
     .then((body) => {
         let data = JSON.parse(body)
-        console.info(data)
+        let groupWall = $('#vk-group-wall')
+        new VkWall(groupWall, data.response).show()
 
         lblLoadingState.text("Загрузка информации лаунчера")
         rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))

@@ -19,6 +19,30 @@ h3, h4 {
     text-align: center;
 }
 
+body {
+    background-image: url('../img/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center top;
+    font-family: 'Roboto', sans-serif;
+}
+
+body::-webkit-scrollbar, .modal-window::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+    display: none; /* fuck this scroll :D */
+}
+
+p.center {
+    color: white;
+    text-align: center;
+}
+
+.padding-top-80 {
+    padding-top: 80px;
+}
+
 .block-items {
     text-align: center;
 }
@@ -31,18 +55,9 @@ h3, h4 {
     text-align: left;
 }
 
-body {
-    background-image: url('../img/background.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center top;
-    font-family: 'Roboto', sans-serif;
-}
-
-p.center {
-    color: white;
-    text-align: center;
+.vk-group-wall {
+    padding: 0;
+    position: relative;
 }
 
 .vk-post {
@@ -51,17 +66,13 @@ p.center {
     border-radius: 4px;
     color: white;
     box-sizing: border-box;
+    margin: 20px auto;
 }
 
 @media screen and (min-width: 800px) {
     .vk-post {
         width: 800px;
-        margin: 0 auto;
     }
-}
-
-.vk-group-wall {
-    padding: 30px 0;
 }
 
 .vk-post-img {
@@ -82,7 +93,6 @@ p.center {
 
 .vk-post-avatar {
     position: absolute;
-    cursor: pointer;
 }
 
 .vk-post-info {
@@ -182,8 +192,11 @@ a:hover {
 
 .page-header-container {
     display: flex;
+    position: fixed;
+    width: 100%;
     justify-content: space-between;
     background-color: rgba(33, 33, 33, 0.8);
+    z-index: 2;
 }
 
 .page-header-container .title {
@@ -317,7 +330,7 @@ footer {
     top: 0;
     right: 0;
     bottom: 0;
-    z-index: 5;
+    z-index: 50;
 }
 
 .modal-window h2 {
