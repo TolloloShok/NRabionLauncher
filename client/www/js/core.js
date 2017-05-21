@@ -255,19 +255,37 @@ btnSettings.click(() => {
 
 // main
 
-currentSettings = nconf.get(CONFIG_SETTINGS)
-
-lblLoadingState.text("Загрузка новостей")
-rest_api.makeGET("https://api.vk.com/method/wall.get?owner_id=-134583593&count=5&filter=owner&extended=1&v=5.64")
-    .then((body) => {
-        let data = JSON.parse(body)
-        let groupWall = $('#vk-group-wall')
-        new VkWall(groupWall, data.response).show()
-
-        lblLoadingState.text("Загрузка информации лаунчера")
+function loadLauncherData() {
+    lblLoadingState.text("Загрузка информации лаунчера")
+    setTimeout(() => {
         rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
             .then((body) => {
                 let data = JSON.parse(body)
                 versionsCheck(data)
             })
-    })
+    }, 100)
+}
+
+function loadVkNews() {
+    let groupWall = $('#vk-group-wall')
+
+    lblLoadingState.text("Загрузка новостей")
+    setTimeout(() => {
+        rest_api.makeGET("https://api.vk.com/method/wall.get?owner_id=-134583593&count=5&filter=owner&extended=1&v=5.64")
+            .then((body) => {
+                let data = JSON.parse(body)
+                new VkWall(groupWall, data.response).show()
+
+                loadLauncherData()
+            })
+            .catch((err) => {
+                // Произошла какая-то х*йня, скрываем лучше блок новостей
+                groupWall.addClass("hide")
+                loadLauncherData()
+            })
+    }, 100)
+}
+
+currentSettings = nconf.get(CONFIG_SETTINGS)
+
+loadVkNews()

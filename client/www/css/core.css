@@ -28,7 +28,7 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-body::-webkit-scrollbar, .modal-window::-webkit-scrollbar {
+body::-webkit-scrollbar, .modal-scroll::-webkit-scrollbar {
     width: 0px;  /* remove scrollbar space */
     background: transparent;  /* optional: just make scrollbar invisible */
     display: none; /* fuck this scroll :D */
@@ -56,7 +56,6 @@ p.center {
 }
 
 .vk-group-wall {
-    padding: 0;
     position: relative;
 }
 
