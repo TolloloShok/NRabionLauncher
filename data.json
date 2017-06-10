@@ -1,0 +1,35 @@
+{
+    "files": [
+        { "name": "assets.zip", "type": "zip" },
+        { "name": "libraries.zip", "type": "zip" },
+        { "name": "versions.zip", "type": "zip" },
+        { "name": "others.zip", "type": "zip" },
+        { "name": "mods.zip", "type": "zip" }
+    ],
+    "dir_checker": [
+        {
+            "name": "mods",
+            "file_download": { "name": "mods.zip", "type": "zip" },
+            "file_list": [
+                { "name": "custommainmenu-mc1.11-2.0.3 (1).jar", "hash": "xxx" },
+                { "name": "damage-indicators-mod-by-torocraft-1.11.jar", "hash": "xxx" },
+                { "name": "liteloader-1.11-SNAPSHOT-release.jar", "hash": "xxx" },
+                { "name": "mod_macros_0.14.1_for_1.11.litemod", "hash": "xxx" },
+                { "name": "OptiFine_1.11_HD_U_B1.jar", "hash": "xxx" },
+                { "name": "Xaeros_Minimap_1.11.7_Forge_1.11.jar", "hash": "xxx" }
+            ],
+            "files_other_delete": true
+        },
+        {
+            "name": "versions\\ForgeOptiFine 1.11",
+            "file_download": { "name": "versions.zip", "type": "zip" },
+            "file_list": [
+                { "name": "ForgeOptiFine 1.11.jar", "hash": "xxx" }
+            ],
+            "files_other_delete": false
+        }
+    ],
+    "version": "1.11",
+    "launcher_version": "1.1.1",
+    "launcher_setup": "NRabionLauncher Setup 1.1.1.exe"
+}

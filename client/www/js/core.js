@@ -135,7 +135,7 @@ function run_minecraft() {
             .run({
                 onStart: () => {
                     pager.show(pager.PAGE_PLAYING)
-                    setTimeout(() => { window.mainWindow.minimize() }, 1500)
+                    setTimeout(() => { window.mainWindow.close() }, 2000)
                 },
                 onFinish: () => {
                     openPageAccount()
@@ -289,3 +289,5 @@ function loadVkNews() {
 currentSettings = nconf.get(CONFIG_SETTINGS)
 
 loadVkNews()
+
+// TODO: https://blog.tompawlak.org/calculate-checksum-hash-nodejs-javascript
