@@ -29,64 +29,66 @@ nconf.use('file', { file: path.join(mcUpdater.getDir(), 'launcher_config.json') 
 nconf.load()
 
 function versionsCheck(data) {
-    let version = nconf.get(CONFIG_VERSION_LAUNCHER)
+    return new Promise((resolve, reject) => {
+        let version = nconf.get(CONFIG_VERSION_LAUNCHER)
 
-    // check launcher updates
-    if (launcherUpdater.checkUpdate(data, window.launcherVersion)) {
-        pager.show(pager.PAGE_DOWNLOAD_LAUNCHER)
+        // check launcher updates
+        if (launcherUpdater.checkUpdate(data, window.launcherVersion)) {
+            pager.show(pager.PAGE_DOWNLOAD_LAUNCHER)
 
-        let divDownloadLauncher = $("#download-launcher-progress")
-        let downloadProgress = new DownloadItemProgress(divDownloadLauncher)
-        downloadProgress.title(data.launcher_setup)
+            let divDownloadLauncher = $("#download-launcher-progress")
+            let downloadProgress = new DownloadItemProgress(divDownloadLauncher)
+            downloadProgress.title(data.launcher_setup)
 
-        launcherUpdater.update(
-            data,
-            {
-                onProgress: (progress) => {
-                    downloadProgress.progress(progress)
-                },
-                onSuccess: (localFileName) => {
-                    downloadProgress.complete()
-                    setTimeout(() => {
-                        shell.openExternal('"' + localFileName + '"')
-                        window.mainWindow.close()
-                    }, 1500)
-                }
-            })
-        return
-    }
+            launcherUpdater.update(
+                data,
+                {
+                    onProgress: (progress) => {
+                        downloadProgress.progress(progress)
+                    },
+                    onSuccess: (localFileName) => {
+                        downloadProgress.complete()
+                        setTimeout(() => {
+                            shell.openExternal('"' + localFileName + '"')
+                            window.mainWindow.close()
+                        }, 1500)
+                    }
+                })
+            return
+        }
 
-    // check minecraft updates
-    if (mcUpdater.checkUpdate(data, version)) {
-        pager.show(pager.PAGE_DOWNLOAD)
+        // check minecraft updates
+        if (mcUpdater.checkUpdate(data, version)) {
+            pager.show(pager.PAGE_DOWNLOAD)
 
-        let divDownloadItems = $("#download-client-progress")
-        var downloadProgress = null
+            let divDownloadItems = $("#download-client-progress")
+            var downloadProgress = null
 
-        mcUpdater.updateFull(
-            data,
-            {
-                callbackFileDownload: (name) => {
-                    downloadProgress = new DownloadItemProgress(divDownloadItems)
-                    downloadProgress.title(name)
-                },
-                callbackProgressDownload: (name, progress) => {
-                    downloadProgress.progress(progress)
-                },
-                callbackFileDownloadComplete: (name) => {
-                    downloadProgress.complete()
-                },
-                callbackComplete: () => {
-                    nconf.set(CONFIG_VERSION_LAUNCHER, data.version)
-                    nconf.save()
+            mcUpdater.updateFull(
+                data,
+                {
+                    callbackFileDownload: (name) => {
+                        downloadProgress = new DownloadItemProgress(divDownloadItems)
+                        downloadProgress.title(name)
+                    },
+                    callbackProgressDownload: (name, progress) => {
+                        downloadProgress.progress(progress)
+                    },
+                    callbackFileDownloadComplete: (name) => {
+                        downloadProgress.complete()
+                    },
+                    callbackComplete: () => {
+                        nconf.set(CONFIG_VERSION_LAUNCHER, data.version)
+                        nconf.save()
 
-                    openPageAuth()
-                }
-            })
-        return
-    }
+                        resolve()
+                    }
+                })
+            return
+        }
 
-    openPageAuth()
+        resolve()
+    })
 }
 
 // events
@@ -256,38 +258,49 @@ btnSettings.click(() => {
 // main
 
 function loadLauncherData() {
-    lblLoadingState.text("Загрузка информации лаунчера")
-    setTimeout(() => {
-        rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
-            .then((body) => {
-                let data = JSON.parse(body)
-                versionsCheck(data)
-            })
-    }, 100)
+    return new Promise((resolve, reject) => {
+        lblLoadingState.text("Загрузка информации лаунчера")
+        setTimeout(() => {
+            rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
+                .then((body) => {
+                    let data = JSON.parse(body)
+                    resolve(data)
+                })
+        }, 100)
+    })
 }
 
 function loadVkNews() {
-    let groupWall = $('#vk-group-wall')
+    return new Promise((resolve, reject) => {
+        let groupWall = $('#vk-group-wall')
 
-    lblLoadingState.text("Загрузка новостей")
-    setTimeout(() => {
-        rest_api.makeGET("https://api.vk.com/method/wall.get?owner_id=-134583593&count=5&filter=owner&extended=1&v=5.64")
-            .then((body) => {
-                let data = JSON.parse(body)
-                new VkWall(groupWall, data.response).show()
+        lblLoadingState.text("Загрузка новостей")
+        setTimeout(() => {
+            rest_api.makeGET("https://api.vk.com/method/wall.get?owner_id=-134583593&count=5&filter=owner&extended=1&v=5.64")
+                .then((body) => {
+                    let data = JSON.parse(body)
+                    new VkWall(groupWall, data.response).show()
 
-                loadLauncherData()
-            })
-            .catch((err) => {
-                // Произошла какая-то х*йня, скрываем лучше блок новостей
-                groupWall.addClass("hide")
-                loadLauncherData()
-            })
-    }, 100)
+                    resolve()
+                })
+                .catch((err) => {
+                    // Произошла какая-то х*йня, скрываем лучше блок новостей
+                    groupWall.addClass("hide")
+
+                    resolve()
+                })
+        }, 100)
+    })
 }
 
 currentSettings = nconf.get(CONFIG_SETTINGS)
 
-loadVkNews()
+/*loadVkNews()
+    .then(loadLauncherData)
+    .then(versionsCheck)
+    .then(openPageAuth)*/
 
-// TODO: https://blog.tompawlak.org/calculate-checksum-hash-nodejs-javascript
+// TODO
+const hash = require("./hash.js")
+hash.file_md5("C:\\Users\\karen\\Documents\\GitHub\\NRabionLauncher\\data.json")
+    .then(console.info)
