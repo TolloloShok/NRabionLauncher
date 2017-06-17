@@ -1,10 +1,10 @@
 'use strict';
 
-let http = require('http')
-let url = require('url')
-let nconf = require('nconf')
-let path = require('path')
-let child_process = require('child_process')
+const http = require('http')
+const url = require('url')
+const nconf = require('nconf')
+const path = require('path')
+const child_process = require('child_process')
 const {shell} = require('electron')
 
 const CONFIG_VERSION_LAUNCHER = "version_minecraft"
@@ -24,6 +24,22 @@ const {VkWall} = require("./vk.js")
 
 let mcUpdater = new UpdaterMinecraft()
 let launcherUpdater = new UpdaterLauncher()
+
+let btnNrabionLink = $("#nrabion_link")
+let btnRunMinecraft = $("#button-run")
+let btnLogIn = $("#button-login")
+let btnLogOut = $("#button-exit")
+let btnReg = $("#button-registration")
+let btnLastLogin = $("#button-last-login")
+let txtBindUsername = $("[data-bind=username]")
+let divLastLogin = $("#last-login-container")
+let txtLastLoginUsername = $("#username-last-login")
+let btnSettings = $("#button-settings")
+let lblLoadingState = $("#loading-state")
+
+var currentProfile = null
+var currentSettings = null
+var lockDoubleAuth = false
 
 nconf.use('file', { file: path.join(mcUpdater.getDir(), 'launcher_config.json') })
 nconf.load()
@@ -87,28 +103,15 @@ function versionsCheck(data) {
             return
         }
 
-        resolve()
+        // check minecraft files
+        mcUpdater.checkFiles(data, {
+            callbackComplete: () => {
+                console.info("Check files complete! RESOLVE!")
+                resolve()
+            }
+        })
     })
 }
-
-// events
-
-let btnNrabionLink = $("#nrabion_link")
-let btnRunMinecraft = $("#button-run")
-let btnLogIn = $("#button-login")
-let btnLogOut = $("#button-exit")
-let btnReg = $("#button-registration")
-let btnLastLogin = $("#button-last-login")
-let txtBindUsername = $("[data-bind=username]")
-let divLastLogin = $("#last-login-container")
-let txtLastLoginUsername = $("#username-last-login")
-let btnSettings = $("#button-settings")
-let lblLoadingState = $("#loading-state")
-
-var currentProfile = null
-var currentSettings = null
-
-var lockDoubleAuth = false
 
 function openPageAccount() {
     if (currentProfile) {
@@ -295,12 +298,7 @@ function loadVkNews() {
 
 currentSettings = nconf.get(CONFIG_SETTINGS)
 
-/*loadVkNews()
+loadVkNews()
     .then(loadLauncherData)
     .then(versionsCheck)
-    .then(openPageAuth)*/
-
-// TODO
-const hash = require("./hash.js")
-hash.file_md5("C:\\Users\\karen\\Documents\\GitHub\\NRabionLauncher\\data.json")
-    .then(console.info)
+    .then(openPageAuth)

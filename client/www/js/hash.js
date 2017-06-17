@@ -2,6 +2,7 @@
 
 const crypto = require('crypto')
 const fs = require('fs')
+const path = require('path')
 
 function file_md5(filename) {
     return new Promise((resolve, reject) => {
@@ -13,7 +14,11 @@ function file_md5(filename) {
         })
 
         stream.on('end', function () {
-            resolve(hash.digest('hex'))
+            resolve({
+                "fullName": filename,
+                "name": path.basename(filename),
+                "hash": hash.digest('hex')
+            })
         })
     })
 }

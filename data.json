@@ -6,9 +6,9 @@
         { "name": "others.zip", "type": "zip" },
         { "name": "mods.zip", "type": "zip" }
     ],
-    "dir_checker": [
+    "file_checker": [
         {
-            "name": "mods",
+            "dir": "mods",
             "file_download": { "name": "mods.zip", "type": "zip" },
             "file_list": [
                 { "name": "custommainmenu-mc1.11-2.0.3 (1).jar", "hash": "a04565dd46cd855973a260e824c81aa9" },
@@ -17,16 +17,32 @@
                 { "name": "mod_macros_0.14.1_for_1.11.litemod", "hash": "a2aa420834845ebd92df6ab86b9464fa" },
                 { "name": "OptiFine_1.11_HD_U_B1.jar", "hash": "e3f65b0ff5c604ecaa0dfdd9b1ed0180" },
                 { "name": "Xaeros_Minimap_1.11.7_Forge_1.11.jar", "hash": "b06981265b5569527141b09462a8b26b" }
-            ],
-            "files_other_delete": true
+            ]
         },
         {
-            "name": "versions\\ForgeOptiFine 1.11",
+            "dir": "versions\\ForgeOptiFine 1.11",
             "file_download": { "name": "versions.zip", "type": "zip" },
             "file_list": [
                 { "name": "ForgeOptiFine 1.11.jar", "hash": "510545771ac1668e422811b23183f5b4" }
+            ]
+        }
+    ],
+    "dir_checker": [
+        {
+            "dir": "mods",
+            "dirs": [
+                "1.11",
+                "VoxelMods",
+                "XaeroWaypoints"
             ],
-            "files_other_delete": false
+            "files": [
+                "custommainmenu-mc1.11-2.0.3 (1).jar",
+                "damage-indicators-mod-by-torocraft-1.11.jar",
+                "liteloader-1.11-SNAPSHOT-release.jar",
+                "mod_macros_0.14.1_for_1.11.litemod",
+                "OptiFine_1.11_HD_U_B1.jar",
+                "Xaeros_Minimap_1.11.7_Forge_1.11.jar"
+            ]
         }
     ],
     "version": "1.11",

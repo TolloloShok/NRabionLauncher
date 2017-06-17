@@ -7,6 +7,7 @@ const extract = require('extract-zip')
 
 const consts = require('./consts.js')
 const downloader = require('./download.js')
+const hash = require("./hash.js")
 
 const minecraftDirectory = path.join(process.env.APPDATA, consts.MINECRAFT_DIR_NAME)
 
@@ -17,22 +18,12 @@ class UpdaterLauncher {
     }
 
     checkUpdate(data, currentVersion) {
-        return currentVersion === undefined || currentVersion != data.launcher_version;
+        return currentVersion === undefined || currentVersion != data.launcher_version
     }
 
     update(data, options) {
         let localFileName = path.join(this.minecraftDir, data.launcher_setup)
         let remoteFileName = url.resolve(consts.URL_LAUNCHER, data.launcher_setup)
-
-        /*if (fs.existsSync(localFileName)) {
-            if (options.onSuccess) {
-                options.onSuccess(localFileName)
-            }
-            if (options.onFinish) {
-                options.onFinish()
-            }
-            return;
-        }*/
 
         downloader.downloadFile({
             localFile: localFileName,
@@ -72,22 +63,115 @@ class UpdaterMinecraft {
     }
 
     getDir() {
-        return this.minecraftDir;
+        return this.minecraftDir
+    }
+
+    checkFiles(data, options) {
+        let promiseDirs = new Promise((resolve, reject) => {
+            let countDirs = data.dir_checker.length
+
+            if (countDirs == 0) {
+                resolve()
+                return
+            }
+
+            let recursiveDir = index => {
+                if (index >= countDirs) {
+                    resolve()
+                    return
+                }
+
+                let d = data.dir_checker[index]
+                let dir_name = path.join(this.minecraftDir, d.dir)
+
+                if (fs.existsSync(dir_name)) {
+                    fs.readdirSync(dir_name).forEach(file => {
+                        let fileName = path.join(dir_name, file)
+                        let fileStat = fs.statSync(fileName)
+
+                        if (fileStat.isFile() && !d.files.includes(file)) {
+                            fs.removeSync(fileName)
+                        } else if (fileStat.isDirectory() && !d.dirs.includes(file)) {
+                            fs.removeSync(fileName)
+                        }
+                    })
+                }
+
+                recursiveDir(index + 1)
+            }
+
+            recursiveDir(0)
+        })
+
+        let promiseFiles = new Promise((resolve, reject) => {
+            let countFiles = data.file_checker.length
+
+            if (countFiles == 0) {
+                resolve()
+                return
+            }
+
+            let recursiveCheckDir = index => {
+                if (index >= countFiles) {
+                    resolve()
+                    return
+                }
+
+                let f = data.file_checker[index]
+                let dir_name = path.join(this.minecraftDir, f.dir)
+
+                if (fs.existsSync(dir_name)) {
+                    var promisesFilesForHashing = []
+
+                    // read files & dirs in directory
+                    fs.readdirSync(dir_name).forEach(file => {
+                        let fileName = path.join(dir_name, file)
+                        let fileStat = fs.statSync(fileName)
+
+                        if (fileStat.isFile()) {
+                            promisesFilesForHashing.push(hash.file_md5(fileName))
+                        }
+                    })
+
+                    Promise.all(promisesFilesForHashing)
+                        .then(items => {
+                            console.info(items)
+                            // TODO
+                            recursiveCheckDir(index + 1)
+                        })
+                } else {
+                    recursiveCheckDir(index + 1)
+                }
+            }
+
+            recursiveCheckDir(0)
+        })
+
+        promiseDirs
+            .then(() => promiseFiles)
+            .then(options.callbackComplete)
     }
 
     checkUpdate(data, currentVersion) {
-        return currentVersion === undefined || currentVersion != data.version;
+        return currentVersion === undefined || currentVersion != data.version
     }
 
     updateFull(data, options) {
         let countFiles = data.files.length
+
+        if (countFiles == 0) {
+            if (options.callbackComplete) {
+                options.callbackComplete()
+            }
+            return
+        }
 
         let recursiveDownload = (index) => {
             if (index >= countFiles) {
                 if (options.callbackComplete) {
                     options.callbackComplete()
                 }
-                return;
+                return
             }
 
             let f = data.files[index]
@@ -113,7 +197,7 @@ class UpdaterMinecraft {
                     extract(localFileName, { dir: this.minecraftDir }, (err) => {
                         if (err) {
                             alert(err.message)
-                            return;
+                            return
                         }
 
                         fs.unlink(localFileName, (err) => { })
