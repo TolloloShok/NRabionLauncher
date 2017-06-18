@@ -11,8 +11,6 @@
             "dir": "mods",
             "file_download": { "name": "mods.zip", "type": "zip" },
             "file_list": [
-                { "name": "custommainmenu-mc1.11-2.0.3 (1).jar", "hash": "a04565dd46cd855973a260e824c81aa9" },
-                { "name": "damage-indicators-mod-by-torocraft-1.11.jar", "hash": "a13ec5051a7b289d6ca2c06963cd046d" },
                 { "name": "liteloader-1.11-SNAPSHOT-release.jar", "hash": "1544d17ed5ec1f8957783e3daffb971f" },
                 { "name": "mod_macros_0.14.1_for_1.11.litemod", "hash": "a2aa420834845ebd92df6ab86b9464fa" },
                 { "name": "OptiFine_1.11_HD_U_B1.jar", "hash": "e3f65b0ff5c604ecaa0dfdd9b1ed0180" },
@@ -32,12 +30,9 @@
             "dir": "mods",
             "dirs": [
                 "1.11",
-                "VoxelMods",
                 "XaeroWaypoints"
             ],
             "files": [
-                "custommainmenu-mc1.11-2.0.3 (1).jar",
-                "damage-indicators-mod-by-torocraft-1.11.jar",
                 "liteloader-1.11-SNAPSHOT-release.jar",
                 "mod_macros_0.14.1_for_1.11.litemod",
                 "OptiFine_1.11_HD_U_B1.jar",
@@ -46,6 +41,6 @@
         }
     ],
     "version": "1.11",
-    "launcher_version": "1.1.1",
-    "launcher_setup": "NRabionLauncher Setup 1.1.1.exe"
+    "launcher_version": "1.2.0",
+    "launcher_setup": "NRabionLauncher Setup 1.2.0.exe"
 }

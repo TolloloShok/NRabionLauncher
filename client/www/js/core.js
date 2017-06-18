@@ -39,21 +39,53 @@ let lblLoadingState = $("#loading-state")
 
 var currentProfile = null
 var currentSettings = null
+var launcherData = null
 var lockDoubleAuth = false
 
 nconf.use('file', { file: path.join(mcUpdater.getDir(), 'launcher_config.json') })
 nconf.load()
 
+function checkMinecraftFiles(data) {
+    return new Promise((resolve, reject) => {
+        var divDownloadItems = null
+        var downloadProgress = null
+
+        mcUpdater.checkFiles(data, {
+            callbackPrepare: () => {
+                pager.show(pager.PAGE_DOWNLOAD)
+
+                divDownloadItems = $("#download-client-progress")
+            },
+            callbackFileDownload: (name) => {
+                downloadProgress = new DownloadItemProgress(divDownloadItems)
+                downloadProgress.title(name)
+            },
+            callbackProgressDownload: (name, progress) => {
+                downloadProgress.progress(progress)
+            },
+            callbackFileDownloadComplete: (name) => {
+                downloadProgress.complete()
+            },
+            callbackComplete: () => {
+                resolve()
+            }
+        })
+    })
+}
+
 function versionsCheck(data) {
     return new Promise((resolve, reject) => {
         let version = nconf.get(CONFIG_VERSION_LAUNCHER)
+
+        var divDownloadItems = null
+        var downloadProgress = null
 
         // check launcher updates
         if (launcherUpdater.checkUpdate(data, window.launcherVersion)) {
             pager.show(pager.PAGE_DOWNLOAD_LAUNCHER)
 
-            let divDownloadLauncher = $("#download-launcher-progress")
-            let downloadProgress = new DownloadItemProgress(divDownloadLauncher)
+            divDownloadItems = $("#download-launcher-progress")
+            downloadProgress = new DownloadItemProgress(divDownloadItems)
             downloadProgress.title(data.launcher_setup)
 
             launcherUpdater.update(
@@ -65,8 +97,8 @@ function versionsCheck(data) {
                     onSuccess: (localFileName) => {
                         downloadProgress.complete()
                         setTimeout(() => {
-                            shell.openExternal('"' + localFileName + '"')
                             window.mainWindow.close()
+                            shell.openExternal('"' + localFileName + '"')
                         }, 1500)
                     }
                 })
@@ -77,8 +109,7 @@ function versionsCheck(data) {
         if (mcUpdater.checkUpdate(data, version)) {
             pager.show(pager.PAGE_DOWNLOAD)
 
-            let divDownloadItems = $("#download-client-progress")
-            var downloadProgress = null
+            divDownloadItems = $("#download-client-progress")
 
             mcUpdater.updateFull(
                 data,
@@ -104,12 +135,7 @@ function versionsCheck(data) {
         }
 
         // check minecraft files
-        mcUpdater.checkFiles(data, {
-            callbackComplete: () => {
-                console.info("Check files complete! RESOLVE!")
-                resolve()
-            }
-        })
+        checkMinecraftFiles(data).then(resolve)
     })
 }
 
@@ -135,19 +161,22 @@ function openPageAuth() {
 }
 
 function run_minecraft() {
-    if (currentProfile) {
-        new MinecraftRunner(currentProfile, currentSettings)
-            .run({
-                onStart: () => {
-                    pager.show(pager.PAGE_PLAYING)
-                    setTimeout(() => { window.mainWindow.close() }, 2000)
-                },
-                onFinish: () => {
-                    openPageAccount()
-                    window.mainWindow.restore()
-                }
-            })
-    }
+    checkMinecraftFiles(launcherData)
+        .then(() => {
+            if (currentProfile) {
+                new MinecraftRunner(currentProfile, currentSettings)
+                    .run({
+                        onStart: () => {
+                            pager.show(pager.PAGE_PLAYING)
+                            setTimeout(() => { window.mainWindow.close() }, 3000)
+                        },
+                        onFinish: () => {
+                            openPageAccount()
+                            window.mainWindow.restore()
+                        }
+                    })
+            }
+        })
 }
 
 function authorization() {
@@ -267,6 +296,9 @@ function loadLauncherData() {
             rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
                 .then((body) => {
                     let data = JSON.parse(body)
+
+                    launcherData = data
+
                     resolve(data)
                 })
         }, 100)
@@ -279,7 +311,8 @@ function loadVkNews() {
 
         lblLoadingState.text("Загрузка новостей")
         setTimeout(() => {
-            rest_api.makeGET("https://api.vk.com/method/wall.get?owner_id=-134583593&count=5&filter=owner&extended=1&v=5.64")
+            rest_api
+                .makeGET("https://api.vk.com/method/wall.get?owner_id=-134583593&count=5&filter=owner&extended=1&v=5.64&access_token=e2b75e31e2b75e31e2b75e3164e2f58867ee2b7e2b75e31bbf1e5155a52081210248389")
                 .then((body) => {
                     let data = JSON.parse(body)
                     new VkWall(groupWall, data.response).show()

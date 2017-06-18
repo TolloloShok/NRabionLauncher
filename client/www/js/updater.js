@@ -67,6 +67,7 @@ class UpdaterMinecraft {
     }
 
     checkFiles(data, options) {
+        // Promise for check contains files
         let promiseDirs = new Promise((resolve, reject) => {
             let countDirs = data.dir_checker.length
 
@@ -103,8 +104,76 @@ class UpdaterMinecraft {
             recursiveDir(0)
         })
 
+        // Promise for download file
+        let promiseDownloadFiles = filesForDownload =>
+            new Promise((resolve, reject) => {
+                let countFiles = filesForDownload.length
+
+                if (options.callbackPrepare) {
+                    options.callbackPrepare()
+                }
+
+                let recursiveDownload = index => {
+                    if (index >= countFiles) {
+                        resolve()
+                        return
+                    }
+
+                    let f = filesForDownload[index].file_download
+
+                    if (options.callbackFileDownload) {
+                        options.callbackFileDownload(f.name)
+                    }
+
+                    let urlFileName = url.resolve(consts.URL_CLIENT, f.name)
+                    let localFileName = path.join(this.minecraftDir, f.name)
+
+                    downloader.downloadFile({
+                            localFile: localFileName,
+                            remoteFile: urlFileName,
+                            onProgress: (received_bytes, total_bytes) => {
+                                var percent = (received_bytes * 100) / total_bytes
+                                if (options.callbackProgressDownload) {
+                                    options.callbackProgressDownload(f.name, percent)
+                                }
+                            }
+                        })
+                        .then(() => {
+                            if (f.type == "zip") {
+                                extract(localFileName, { dir: this.minecraftDir }, err => {
+                                    if (err) {
+                                        alert(err.message)
+                                        return
+                                    }
+
+                                    fs.unlink(localFileName, err => {})
+
+                                    if (options.callbackFileDownloadComplete) {
+                                        options.callbackFileDownloadComplete(f.name)
+                                    }
+
+                                    recursiveDownload(index + 1)
+                                })
+                            } else {
+                                if (options.callbackFileDownloadComplete) {
+                                    options.callbackFileDownloadComplete(f.name)
+                                }
+
+                                recursiveDownload(index + 1)
+                            }
+                        })
+                        .catch((err) => {
+                            alert(err.message)
+                        })
+                }
+
+                recursiveDownload(0)
+            })
+
+        // Promise for check checksums
         let promiseFiles = new Promise((resolve, reject) => {
             let countFiles = data.file_checker.length
+            let downloadFileChecker = []
 
             if (countFiles == 0) {
                 resolve()
@@ -113,7 +182,12 @@ class UpdaterMinecraft {
 
             let recursiveCheckDir = index => {
                 if (index >= countFiles) {
-                    resolve()
+                    if (downloadFileChecker.length > 0) {
+                        promiseDownloadFiles(downloadFileChecker)
+                            .then(resolve)
+                    } else {
+                        resolve()
+                    }
                     return
                 }
 
@@ -121,24 +195,47 @@ class UpdaterMinecraft {
                 let dir_name = path.join(this.minecraftDir, f.dir)
 
                 if (fs.existsSync(dir_name)) {
-                    var promisesFilesForHashing = []
+                    let promisesFilesForHashing = []
+                    var needReDownload = false
 
-                    // read files & dirs in directory
-                    fs.readdirSync(dir_name).forEach(file => {
-                        let fileName = path.join(dir_name, file)
-                        let fileStat = fs.statSync(fileName)
+                    f.file_list.forEach(item => {
+                        let fileName = path.join(dir_name, item.name)
 
-                        if (fileStat.isFile()) {
+                        if (fs.existsSync(fileName)) {
                             promisesFilesForHashing.push(hash.file_md5(fileName))
+                        } else {
+                            needReDownload = true
                         }
                     })
 
-                    Promise.all(promisesFilesForHashing)
-                        .then(items => {
-                            console.info(items)
-                            // TODO
-                            recursiveCheckDir(index + 1)
-                        })
+                    if (needReDownload) {
+                        downloadFileChecker.push(f)
+
+                        recursiveCheckDir(index + 1)
+                    } else {
+                        Promise.all(promisesFilesForHashing)
+                            .then(hashItems => {
+                                f.file_list.forEach(item => {
+                                    for (var i = 0; i < hashItems.length; i++) {
+                                        var it = hashItems[i]
+
+                                        if (it.name == item.name && it.hash != item.hash) {
+                                            needReDownload = true
+                                            break
+                                        }
+                                    }
+                                })
+
+                                if (needReDownload) {
+                                    downloadFileChecker.push(f)
+                                }
+
+                                recursiveCheckDir(index + 1)
+                            })
+                            .catch((err) => {
+                                alert(err.message)
+                            })
+                    }
                 } else {
                     recursiveCheckDir(index + 1)
                 }
@@ -150,6 +247,9 @@ class UpdaterMinecraft {
         promiseDirs
             .then(() => promiseFiles)
             .then(options.callbackComplete)
+            .catch((err) => {
+                alert(err.message)
+            })
     }
 
     checkUpdate(data, currentVersion) {
