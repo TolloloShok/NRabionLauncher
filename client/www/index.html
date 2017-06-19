@@ -114,12 +114,18 @@
     <script>
         let remote = require('electron').remote
         let version = remote.getGlobal('sharedObj').version
+        let debug = remote.getGlobal('sharedObj').debug
         let mainWindow = remote.getCurrentWindow()
+
+        window.launcherVersion = version
+        window.isDebug = debug
+        window.mainWindow = mainWindow
 
         document.getElementById("version").innerText = version
 
-        window.launcherVersion = version
-        window.mainWindow = mainWindow
+        if (debug) {
+            document.title = document.title + " - [DEBUG VERSION]"
+        }
 
         window.onload = () => {
             // Wait for loading background image

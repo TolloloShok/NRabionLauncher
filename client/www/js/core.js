@@ -47,6 +47,10 @@ nconf.load()
 
 function checkMinecraftFiles(data) {
     return new Promise((resolve, reject) => {
+        if (window.isDebug) {
+            console.info("Start checkMinecraftFiles")
+        }
+
         var divDownloadItems = null
         var downloadProgress = null
 
@@ -76,6 +80,10 @@ function checkMinecraftFiles(data) {
 function versionsCheck(data) {
     return new Promise((resolve, reject) => {
         let version = nconf.get(CONFIG_VERSION_LAUNCHER)
+
+        if (window.isDebug) {
+            console.info("Start versionsCheck")
+        }
 
         var divDownloadItems = null
         var downloadProgress = null
@@ -292,14 +300,25 @@ btnSettings.click(() => {
 function loadLauncherData() {
     return new Promise((resolve, reject) => {
         lblLoadingState.text("Загрузка информации лаунчера")
+
+        if (window.isDebug) {
+            console.info("Start loadLauncherData")
+        }
+
         setTimeout(() => {
             rest_api.makeGET(url.resolve(consts.URL_BASE, 'data.json'))
-                .then((body) => {
+                .then(body => {
                     let data = JSON.parse(body)
 
                     launcherData = data
 
                     resolve(data)
+                })
+                .catch(err => {
+                    if (window.isDebug) {
+                        console.info("Error in loadLauncherData:")
+                        console.info(err)
+                    }
                 })
         }, 100)
     })
@@ -308,6 +327,10 @@ function loadLauncherData() {
 function loadVkNews() {
     return new Promise((resolve, reject) => {
         let groupWall = $('#vk-group-wall')
+
+        if (window.isDebug) {
+            console.info("Start loadVkNews")
+        }
 
         lblLoadingState.text("Загрузка новостей")
         setTimeout(() => {
@@ -319,9 +342,14 @@ function loadVkNews() {
 
                     resolve()
                 })
-                .catch((err) => {
+                .catch(err => {
                     // Произошла какая-то х*йня, скрываем лучше блок новостей
                     groupWall.addClass("hide")
+
+                    if (window.isDebug) {
+                        console.info("Error in loadVkNews:")
+                        console.info(err)
+                    }
 
                     resolve()
                 })
@@ -335,3 +363,9 @@ loadVkNews()
     .then(loadLauncherData)
     .then(versionsCheck)
     .then(openPageAuth)
+    .catch(err => {
+        if (window.isDebug) {
+            console.info("Error in core:")
+            console.info(err)
+        }
+    })

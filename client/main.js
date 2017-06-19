@@ -9,10 +9,11 @@ const url = require('url')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
+const DEBUG = true
 let mainWindow
 
 // Version application
-global.sharedObj = { "version": app.getVersion() };
+global.sharedObj = { "version": app.getVersion(), "debug": DEBUG };
 
 function createWindow () {
   // Create the browser window.
@@ -26,7 +27,9 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  if (DEBUG) {
+    mainWindow.webContents.openDevTools({ mode: "undocked" })
+  }
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

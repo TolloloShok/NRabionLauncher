@@ -41,8 +41,11 @@ class UpdaterLauncher {
             if (options.onFinish) {
                 options.onFinish()
             }
-        }).catch((err) => {
-            alert(err.message)
+        }).catch(err => {
+            if (window.isDebug) {
+                console.info("Error in UpdaterLauncher.update:")
+                console.info(err)
+            }
             if (options.onFinish) {
                 options.onFinish()
             }
@@ -162,8 +165,11 @@ class UpdaterMinecraft {
                                 recursiveDownload(index + 1)
                             }
                         })
-                        .catch((err) => {
-                            alert(err.message)
+                        .catch(err => {
+                            if (window.isDebug) {
+                                console.info("Error in UpdaterMinecraft.checkFiles:promiseDownloadFiles:")
+                                console.info(err)
+                            }
                         })
                 }
 
@@ -232,8 +238,11 @@ class UpdaterMinecraft {
 
                                 recursiveCheckDir(index + 1)
                             })
-                            .catch((err) => {
-                                alert(err.message)
+                            .catch(err => {
+                                if (window.isDebug) {
+                                    console.info("Error in UpdaterMinecraft.checkFiles:promiseFiles:")
+                                    console.info(err)
+                                }
                             })
                     }
                 } else {
@@ -247,8 +256,11 @@ class UpdaterMinecraft {
         promiseDirs
             .then(() => promiseFiles)
             .then(options.callbackComplete)
-            .catch((err) => {
-                alert(err.message)
+            .catch(err => {
+                if (window.isDebug) {
+                    console.info("Error in UpdaterMinecraft.checkFiles:summaryError:")
+                    console.info(err)
+                }
             })
     }
 
@@ -315,8 +327,11 @@ class UpdaterMinecraft {
 
                     recursiveDownload(index + 1)
                 }
-            }).catch((err) => {
-                alert(err.message)
+            }).catch(err => {
+                if (window.isDebug) {
+                    console.info("Error in UpdaterMinecraft.updateFull:")
+                    console.info(err)
+                }
             })
         }
 
