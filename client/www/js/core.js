@@ -172,6 +172,7 @@ function run_minecraft() {
     checkMinecraftFiles(launcherData)
         .then(() => {
             if (currentProfile) {
+                // TODO: Сделать так, что если ява выплевывает ошибку (закрывается), то отображаем информацию
                 new MinecraftRunner(currentProfile, currentSettings)
                     .run({
                         onStart: () => {

@@ -13,7 +13,7 @@
             "file_list": [
                 { "name": "liteloader-1.11-SNAPSHOT-release.jar", "hash": "1544d17ed5ec1f8957783e3daffb971f" },
                 { "name": "mod_macros_0.14.1_for_1.11.litemod", "hash": "a2aa420834845ebd92df6ab86b9464fa" },
-                { "name": "OptiFine_1.11_HD_U_B1.jar", "hash": "e3f65b0ff5c604ecaa0dfdd9b1ed0180" },
+                { "name": "OptiFine_1.11_HD_U_B1.jar", "hash": "bd435c1b0474a67314155b0776194327" },
                 { "name": "Xaeros_Minimap_1.11.7_Forge_1.11.jar", "hash": "b06981265b5569527141b09462a8b26b" }
             ]
         },
